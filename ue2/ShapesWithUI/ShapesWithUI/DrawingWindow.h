@@ -5,6 +5,7 @@
 
 #include <Windows.h>
 #include <cassert>
+#include <functional>
 #include <vector>
 #include <memory>
 
@@ -32,9 +33,11 @@ namespace DrawingWindow {
 		ULONG_PTR gdi_token_;
 		std::vector<std::shared_ptr<Circle>> shapes_;
 		
-		ATOM					register_class(HINSTANCE hInstance);
+		ATOM					register_class(HINSTANCE instance);
 		BOOL					init_instance(HINSTANCE, int);
-		static LRESULT CALLBACK	wnd_proc(HWND, UINT, WPARAM, LPARAM);
-		void					redraw_shapes(HWND hWnd);
+		static LRESULT CALLBACK	wnd_proc(HWND window_handle, UINT message, WPARAM w_param, LPARAM l_param);
+		void					redraw_shapes(HWND window_handle);
+		void					update_shapes(HWND window_handle, std::function<void(std::shared_ptr<Circle>)> func);
+		void					draw_captions(Gdiplus::Graphics &g) const;
 	};
 }

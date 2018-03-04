@@ -41,7 +41,7 @@ Window::~Window()
 	Gdiplus::GdiplusShutdown(gdi_token_);
 }
 
-void Window::show(std::vector<std::shared_ptr<Circle>> shapes) {	
+void Window::show(std::vector<std::shared_ptr<Circle>> shapes) {
 
 	HINSTANCE instance = static_cast<HINSTANCE>(GetModuleHandleW(nullptr));
 	shapes_ = shapes;
@@ -77,7 +77,7 @@ ATOM Window::register_class(HINSTANCE instance)
 	wcex.cbClsExtra = 0;
 	wcex.cbWndExtra = 0;
 	wcex.hInstance = instance;
-	wcex.hIcon = 0; 
+	wcex.hIcon = 0;
 	wcex.hCursor = LoadCursor(NULL, IDC_ARROW);
 	wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
 	wcex.lpszMenuName = L"";
@@ -119,23 +119,42 @@ void Window::redraw_shapes(HWND window_handle) {
 	RECT clientRect;
 	GetClientRect(window_handle, &clientRect);
 	g.FillRectangle(bg_brush_, 0, 0, clientRect.right - clientRect.left, clientRect.bottom - clientRect.top);
-	
-	double total_area = 0.0;
-	double total_circumference = 0.0;
 
 	for (auto& c : shapes_) {
 		c->draw(pen_, g);
-		total_area += c->area();
-		total_circumference += c->circumference();
 	}
 
-	std::wstring area_string = L"Total Area: " + std::to_wstring(total_area);
-	std::wstring circumference_string = L"Total Circumference: " + std::to_wstring(total_circumference);
-	g.DrawString(area_string.c_str(), area_string.length(), font_ , Gdiplus::PointF(3, 3), font_brush_);
-	g.DrawString(circumference_string.c_str(), circumference_string.length(), font_, Gdiplus::PointF(3, 35), font_brush_);
+	draw_captions(g);
 
 	EndPaint(window_handle, &ps);
 }
+
+void Window::update_shapes(HWND window_handle, std::function<void(std::shared_ptr<Circle>)> func)
+{
+	for (auto& c : shapes_) {
+		func(c);
+	}
+
+	redraw_shapes(window_handle);
+}
+
+void DrawingWindow::Window::draw_captions(Gdiplus::Graphics & g) const
+{
+	double area = 0.0;
+	double circumference = 0.0;
+
+	for (auto& c : shapes_) {
+		area += c->area();
+		circumference += c->circumference();
+	}
+
+	std::wstring area_string = L"Total Area: " + std::to_wstring(area);
+	std::wstring circumference_string = L"Total Circumference: " + std::to_wstring(circumference);
+	g.DrawString(area_string.c_str(), area_string.length(), font_, Gdiplus::PointF(3, 3), font_brush_);
+	g.DrawString(circumference_string.c_str(), circumference_string.length(), font_, Gdiplus::PointF(3, 35), font_brush_);
+}
+
+
 
 LRESULT CALLBACK Window::wnd_proc(HWND window_handle, UINT message, WPARAM w_param, LPARAM l_param)
 {
@@ -148,40 +167,22 @@ LRESULT CALLBACK Window::wnd_proc(HWND window_handle, UINT message, WPARAM w_par
 	case WM_KEYDOWN:
 		switch (w_param) {
 		case VK_UP:
-			for (auto& c : self->shapes_) {
-				c->move(0, -5);
-			}
-			self->redraw_shapes(window_handle);
+			self->update_shapes(window_handle, [](std::shared_ptr<Circle> c) { c->move(0, -5); });
 			break;
 		case VK_DOWN:
-			for (auto& c : self->shapes_) {
-				c->move(0, 5);
-			}
-			self->redraw_shapes(window_handle);
+			self->update_shapes(window_handle, [](std::shared_ptr<Circle> c) { c->move(0, 5); });
 			break;
 		case VK_LEFT:
-			for (auto& c : self->shapes_) {
-				c->move(-5, 0);
-			}
-			self->redraw_shapes(window_handle);
+			self->update_shapes(window_handle, [](std::shared_ptr<Circle> c) { c->move(-5, 0); });
 			break;
 		case VK_RIGHT:
-			for (auto& c : self->shapes_) {
-				c->move(5, 0);
-			}
-			self->redraw_shapes(window_handle);
+			self->update_shapes(window_handle, [](std::shared_ptr<Circle> c) { c->move(5, 0); });
 			break;
 		case VK_ADD:
-			for (auto& c : self->shapes_) {
-				c->scale(1.1);
-			}
-			self->redraw_shapes(window_handle);
+			self->update_shapes(window_handle, [](std::shared_ptr<Circle> c) { c->scale(1.1); });
 			break;
 		case VK_SUBTRACT:
-			for (auto& c : self->shapes_) {
-				c->scale(.9);
-			}
-			self->redraw_shapes(window_handle);
+			self->update_shapes(window_handle, [](std::shared_ptr<Circle> c) { c->scale(0.9); });
 			break;
 		case 0x58: // 'X' key - quits
 			PostQuitMessage(0);
