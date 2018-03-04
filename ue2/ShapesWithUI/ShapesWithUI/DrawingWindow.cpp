@@ -9,22 +9,35 @@
 #include <memory>
 #include <functional>
 #include <stdexcept>
+#include <string>
 
 using namespace DrawingWindow;
 
-Window::Window() {
+Window::Window()
+{
 	Gdiplus::GdiplusStartupInput input;
 	Gdiplus::GdiplusStartup(&gdi_token_, &input, NULL);
+
+	pen_ = new Gdiplus::Pen{ Gdiplus::Color{ 0, 0, 200 }, 2.0F };
+	bg_brush_ = new Gdiplus::SolidBrush{ Gdiplus::Color{ 255, 255, 255 } };
+	font_brush_ = new Gdiplus::SolidBrush{ Gdiplus::Color{ 0, 0, 0 } };
+	font_ = new Gdiplus::Font{ L"Arial", 16 };
 }
 
 Window::~Window()
 {
+	delete font_;
+	font_ = nullptr;
+
+	delete bg_brush_;
+	bg_brush_ = nullptr;
+
+	delete font_brush_;
+	font_brush_ = nullptr;
+
 	delete pen_;
 	pen_ = nullptr;
 
-	delete brush_;
-	brush_ = nullptr;
-	
 	Gdiplus::GdiplusShutdown(gdi_token_);
 }
 
@@ -92,10 +105,6 @@ BOOL Window::init_instance(HINSTANCE h_instance, int cmd_show)
 
 	SetWindowLongPtr(hWnd, 0, reinterpret_cast<LONG_PTR>(this));
 
-
-	pen_ = new Gdiplus::Pen{ Gdiplus::Color{ 0, 0, 200 }, 2.0F };
-	brush_ = new Gdiplus::SolidBrush{ Gdiplus::Color{ 255, 255, 255 } };
-
 	ShowWindow(hWnd, cmd_show);
 	UpdateWindow(hWnd);
 
@@ -109,10 +118,21 @@ void Window::redraw_shapes(HWND window_handle) {
 	Gdiplus::Graphics g{ window_handle, false };
 	RECT clientRect;
 	GetClientRect(window_handle, &clientRect);
-	g.FillRectangle(brush_, 0, 0, clientRect.right - clientRect.left, clientRect.bottom - clientRect.top);
+	g.FillRectangle(bg_brush_, 0, 0, clientRect.right - clientRect.left, clientRect.bottom - clientRect.top);
+	
+	double total_area = 0.0;
+	double total_circumference = 0.0;
+
 	for (auto& c : shapes_) {
 		c->draw(pen_, g);
+		total_area += c->area();
+		total_circumference += c->circumference();
 	}
+
+	std::wstring area_string = L"Total Area: " + std::to_wstring(total_area);
+	std::wstring circumference_string = L"Total Circumference: " + std::to_wstring(total_circumference);
+	g.DrawString(area_string.c_str(), area_string.length(), font_ , Gdiplus::PointF(3, 3), font_brush_);
+	g.DrawString(circumference_string.c_str(), circumference_string.length(), font_, Gdiplus::PointF(3, 35), font_brush_);
 
 	EndPaint(window_handle, &ps);
 }
@@ -162,6 +182,9 @@ LRESULT CALLBACK Window::wnd_proc(HWND window_handle, UINT message, WPARAM w_par
 				c->scale(.9);
 			}
 			self->redraw_shapes(window_handle);
+			break;
+		case 0x58: // 'X' key - quits
+			PostQuitMessage(0);
 			break;
 		default:
 			break;

@@ -25,8 +25,10 @@ namespace DrawingWindow {
 		HINSTANCE h_instance_;								// current instance
 		TCHAR title_[MAX_LOADSTRING] = L"Shapes";					
 		TCHAR window_class_[MAX_LOADSTRING] = L"ECE_Shapes";
-		Gdiplus::Pen *pen_;
-		Gdiplus::Brush *brush_;
+		Gdiplus::Pen* pen_;
+		Gdiplus::SolidBrush* bg_brush_;
+		Gdiplus::SolidBrush* font_brush_;
+		Gdiplus::Font* font_;
 		ULONG_PTR gdi_token_;
 		std::vector<std::shared_ptr<Circle>> shapes_;
 		

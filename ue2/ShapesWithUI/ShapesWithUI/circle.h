@@ -17,9 +17,15 @@ public:
 
 	void move(float dx, float dy);
 
+	double area() const;
+
+	double circumference() const;
+
 private:
 	float radius_;
 
 	Point2d center_;
+
+	constexpr static double pi_ = 3.14159265358979323846;
 };
 

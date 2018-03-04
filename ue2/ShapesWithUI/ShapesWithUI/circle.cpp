@@ -26,3 +26,13 @@ void Circle::move(float dx, float dy)
 	center_.x += dx;
 	center_.y += dy;
 }
+
+double Circle::area() const
+{
+	return radius_ * radius_ * pi_;
+}
+
+double Circle::circumference() const
+{
+	return 2 * radius_ * pi_;
+}
