@@ -2,10 +2,10 @@
 
 #include "Point2d.h"
 
-Point2d::Point2d()
+Point2d::Point2d() : x{ 0 }, y{ 0 }
 {
 }
 
-Point2d::Point2d(float xx, float yy) : x{xx}, y{yy}
+Point2d::Point2d(double xx, double yy) : x{xx}, y{yy}
 {
 }

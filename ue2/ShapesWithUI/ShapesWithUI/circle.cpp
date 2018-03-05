@@ -7,21 +7,24 @@ Circle::Circle() : radius_{ 1 }, center_{ 0,0 }
 {
 }
 
-Circle::Circle(float radius, Point2d center) : radius_{ radius }, center_{ center }
+Circle::Circle(double radius, Point2d center) : radius_{ radius }, center_{ center }
 {
 }
 
-void Circle::draw(Gdiplus::Pen* pen, Gdiplus::Graphics& g)
+void Circle::draw(Gdiplus::Pen* pen, Gdiplus::Graphics* g)
 {
-	g.DrawEllipse(pen, center_.x - radius_, center_.y - radius_, 2.0 * radius_, 2.0 * radius_);
+	g->DrawEllipse(pen, static_cast<Gdiplus::REAL>(center_.x - radius_), 
+		static_cast<Gdiplus::REAL>(center_.y - radius_), 
+		static_cast<Gdiplus::REAL>(2.0 * radius_), 
+		static_cast<Gdiplus::REAL>(2.0 * radius_));
 }
 
-void Circle::scale(float factor)
+void Circle::scale(double factor)
 {
 	radius_ *= factor;
 }
 
-void Circle::move(float dx, float dy)
+void Circle::move(double dx, double dy)
 {
 	center_.x += dx;
 	center_.y += dy;

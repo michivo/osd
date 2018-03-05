@@ -19,6 +19,10 @@ namespace DrawingWindow {
 
 		~Window();
 
+		Window(const Window&) = delete;
+
+		Window& operator=(const Window&) = delete;
+
 		void show(std::vector<std::shared_ptr<Circle>> shapes);
 
 	private:
@@ -38,6 +42,6 @@ namespace DrawingWindow {
 		static LRESULT CALLBACK	wnd_proc(HWND window_handle, UINT message, WPARAM w_param, LPARAM l_param);
 		void					redraw_shapes(HWND window_handle);
 		void					update_shapes(HWND window_handle, std::function<void(std::shared_ptr<Circle>)> func);
-		void					draw_captions(Gdiplus::Graphics &g) const;
+		void					draw_captions(Gdiplus::Graphics* g) const;
 	};
 }

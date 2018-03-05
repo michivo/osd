@@ -9,20 +9,20 @@ class Circle
 public:
 	Circle();
 
-	Circle(float radius, Point2d center);
+	Circle(double radius, Point2d center);
 
-	void draw(Gdiplus::Pen* pen, Gdiplus::Graphics& g);
+	void draw(Gdiplus::Pen* pen, Gdiplus::Graphics* g);
 
-	void scale(float factor);
+	void scale(double factor);
 
-	void move(float dx, float dy);
+	void move(double dx, double dy);
 
 	double area() const;
 
 	double circumference() const;
 
 private:
-	float radius_;
+	double radius_;
 
 	Point2d center_;
 
