@@ -16,24 +16,24 @@ namespace DrawingWindow {
 	class Window {
 	public:
 		Window();
-
 		~Window();
-
-		Window(const Window&) = delete;
-
-		Window& operator=(const Window&) = delete;
+		Window(const Window&) = delete; // no copy because then two window objects would operate on one physical window
+		Window(Window&&) = default; // move is ok
+		Window& operator=(const Window&) = delete; // no copy again
+		Window& operator=(Window&&) = default; // move is ok
 
 		void show(std::vector<std::shared_ptr<Circle>> shapes);
 
 	private:
 
 		HINSTANCE h_instance_;								// current instance
-		TCHAR title_[MAX_LOADSTRING] = L"Shapes";					
-		TCHAR window_class_[MAX_LOADSTRING] = L"ECE_Shapes";
-		Gdiplus::Pen* pen_;
-		Gdiplus::SolidBrush* bg_brush_;
-		Gdiplus::SolidBrush* font_brush_;
-		Gdiplus::Font* font_;
+		const TCHAR title_[MAX_LOADSTRING] = L"Shapes";					
+		const TCHAR window_class_[MAX_LOADSTRING] = L"ECE_Shapes";
+
+		std::unique_ptr<Gdiplus::Pen> pen_;
+		std::unique_ptr<Gdiplus::SolidBrush> bg_brush_;
+		std::unique_ptr<Gdiplus::SolidBrush> font_brush_;
+		std::unique_ptr<Gdiplus::Font> font_;
 		ULONG_PTR gdi_token_;
 		std::vector<std::shared_ptr<Circle>> shapes_;
 		

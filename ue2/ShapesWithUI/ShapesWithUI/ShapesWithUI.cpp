@@ -9,6 +9,10 @@
 #include <memory>
 
 
+DrawingWindow::Window create_window() {
+	return DrawingWindow::Window();
+}
+
 int main()
 {
 	std::vector<std::shared_ptr<Circle>> circles;
@@ -20,7 +24,7 @@ int main()
 	circles.push_back(std::make_shared<Circle>(Circle{ 90, Point2d{ 10, 100 } }));
 	circles.push_back(std::make_shared<Circle>(Circle{ 10, Point2d{ 520, 50 } }));
 	circles.push_back(std::make_shared<Circle>(Circle{ 5, Point2d{ 200, 100 } }));
-	DrawingWindow::Window w;
+	DrawingWindow::Window w = create_window();
 	w.show(circles);
     return 0;
 }
