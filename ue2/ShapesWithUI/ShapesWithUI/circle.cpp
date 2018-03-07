@@ -2,6 +2,7 @@
 
 #include "circle.h"
 #include "Point2d.h"
+#include "ICanvas.h"
 
 Circle::Circle() : radius_{ 1 }, center_{ 0,0 }
 {
@@ -11,12 +12,9 @@ Circle::Circle(double radius, Point2d center) : radius_{ radius }, center_{ cent
 {
 }
 
-void Circle::draw(Gdiplus::Pen* pen, Gdiplus::Graphics* g)
+void Circle::draw(ICanvas& canvas) const
 {
-	g->DrawEllipse(pen, static_cast<Gdiplus::REAL>(center_.x - radius_), 
-		static_cast<Gdiplus::REAL>(center_.y - radius_), 
-		static_cast<Gdiplus::REAL>(2.0 * radius_), 
-		static_cast<Gdiplus::REAL>(2.0 * radius_));
+	canvas.draw_ellipse(center_, 2 * radius_, 2 * radius_);
 }
 
 void Circle::scale(double factor)

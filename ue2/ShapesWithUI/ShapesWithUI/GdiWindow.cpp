@@ -1,9 +1,11 @@
 #include "stdafx.h"
 
-#include "DrawingWindow.h"
+#include "GdiWindow.h"
 
 #include "circle.h"
 #include "Point2d.h"
+#include "GdiCanvas.h"
+#include "ICanvas.h"
 
 #include <vector>
 #include <memory>
@@ -11,20 +13,18 @@
 #include <stdexcept>
 #include <string>
 
-using namespace DrawingWindow;
-
-Window::Window()
+GdiWindow::GdiWindow()
 {
 	Gdiplus::GdiplusStartupInput input;
 	Gdiplus::GdiplusStartup(&gdi_token_, &input, NULL);
 
-	pen_ = std::make_unique<Gdiplus::Pen>(Gdiplus::Color{ 0, 0, 200 }, 2.0F);
+	pen_ = std::make_shared<Gdiplus::Pen>(Gdiplus::Color{ 0, 0, 200 }, 2.0F);
 	bg_brush_ = std::make_unique<Gdiplus::SolidBrush>(Gdiplus::Color{ 255, 255, 255 });
 	font_brush_ = std::make_unique<Gdiplus::SolidBrush>(Gdiplus::Color{ 0, 0, 0 });
 	font_ = std::make_unique<Gdiplus::Font>( L"Calibri", 16.0F );
 }
 
-Window::~Window()
+GdiWindow::~GdiWindow()
 {
 	font_.reset(); // reset required before shutdown
 	pen_.reset();
@@ -33,7 +33,7 @@ Window::~Window()
 	Gdiplus::GdiplusShutdown(gdi_token_);
 }
 
-void Window::show(std::vector<std::shared_ptr<Circle>> shapes) {
+void GdiWindow::show(std::vector<std::shared_ptr<Circle>> shapes) {
 
 	HINSTANCE instance = static_cast<HINSTANCE>(GetModuleHandleW(nullptr));
 	shapes_ = shapes;
@@ -58,14 +58,14 @@ void Window::show(std::vector<std::shared_ptr<Circle>> shapes) {
 	}
 }
 
-ATOM Window::register_class(HINSTANCE instance)
+ATOM GdiWindow::register_class(HINSTANCE instance)
 {
 	WNDCLASSEX wcex;
 
 	wcex.cbSize = sizeof(WNDCLASSEX);
 
 	wcex.style = CS_HREDRAW | CS_VREDRAW;
-	wcex.lpfnWndProc = Window::wnd_proc;
+	wcex.lpfnWndProc = GdiWindow::wnd_proc;
 	wcex.cbClsExtra = 0;
 	wcex.cbWndExtra = 0;
 	wcex.hInstance = instance;
@@ -75,13 +75,13 @@ ATOM Window::register_class(HINSTANCE instance)
 	wcex.lpszMenuName = L"";
 	wcex.lpszClassName = window_class_;
 	wcex.hIconSm = NULL;
-	wcex.cbWndExtra = sizeof(Window*);
+	wcex.cbWndExtra = sizeof(GdiWindow*);
 
 	return RegisterClassEx(&wcex);
 }
 
 
-BOOL Window::init_instance(HINSTANCE h_instance, int cmd_show)
+BOOL GdiWindow::init_instance(HINSTANCE h_instance, int cmd_show)
 {
 	HWND hWnd;
 
@@ -103,31 +103,33 @@ BOOL Window::init_instance(HINSTANCE h_instance, int cmd_show)
 	return TRUE;
 }
 
-void Window::redraw_shapes(HWND window_handle) {
+void GdiWindow::redraw_shapes(HWND window_handle) {
 	PAINTSTRUCT ps;
 	HDC hdc = BeginPaint(window_handle, &ps);
 	Gdiplus::Graphics window_graphics(window_handle);
 
-	RECT clientRect;
-	GetClientRect(window_handle, &clientRect);
-	int width = clientRect.right - clientRect.left;
-	int height = clientRect.bottom - clientRect.top;
+	RECT client_rect;
+	GetClientRect(window_handle, &client_rect);
+	int width = client_rect.right - client_rect.left;
+	int height = client_rect.bottom - client_rect.top;
 	Gdiplus::Bitmap bmp(width, height);
-	Gdiplus::Graphics *g = Gdiplus::Graphics::FromImage(&bmp);
+
+	auto g = std::shared_ptr<Gdiplus::Graphics> { Gdiplus::Graphics::FromImage(&bmp) };
+
 	g->FillRectangle(bg_brush_.get(), 0, 0, width, height);
+	Gdi_canvas canvas{ g, pen_ };
 
 	for (auto& c : shapes_) {
-		c->draw(pen_.get(), g);
+		c->draw(canvas);
 	}
 
 	draw_captions(g);
 	window_graphics.DrawImage(&bmp, 0, 0, width, height);
 
-	delete g;
 	EndPaint(window_handle, &ps);
 }
 
-void Window::update_shapes(HWND window_handle, std::function<void(std::shared_ptr<Circle>)> func)
+void GdiWindow::update_shapes(HWND window_handle, std::function<void(std::shared_ptr<Circle>)> func)
 {
 	for (auto& c : shapes_) {
 		func(c);
@@ -136,7 +138,7 @@ void Window::update_shapes(HWND window_handle, std::function<void(std::shared_pt
 	RedrawWindow(window_handle, NULL, NULL, RDW_INVALIDATE);
 }
 
-void DrawingWindow::Window::draw_captions(Gdiplus::Graphics* g) const
+void GdiWindow::draw_captions(std::shared_ptr<Gdiplus::Graphics> g) const
 {
 	double area = 0.0;
 	double circumference = 0.0;
@@ -156,9 +158,9 @@ void DrawingWindow::Window::draw_captions(Gdiplus::Graphics* g) const
 
 
 
-LRESULT CALLBACK Window::wnd_proc(HWND window_handle, UINT message, WPARAM w_param, LPARAM l_param)
+LRESULT CALLBACK GdiWindow::wnd_proc(HWND window_handle, UINT message, WPARAM w_param, LPARAM l_param)
 {
-	Window* self = reinterpret_cast<Window*>(GetWindowLongPtrW(window_handle, 0));
+	GdiWindow* self = reinterpret_cast<GdiWindow*>(GetWindowLongPtrW(window_handle, 0));
 
 	switch (message)
 	{
@@ -182,7 +184,7 @@ LRESULT CALLBACK Window::wnd_proc(HWND window_handle, UINT message, WPARAM w_par
 		case VK_SUBTRACT:
 			self->update_shapes(window_handle, [](std::shared_ptr<Circle> c) { c->scale(1.0/1.1); });
 			break;
-		case 0x58: // 'X' key - quits
+		case 'X': // x quits
 			PostQuitMessage(0);
 			break;
 		default:

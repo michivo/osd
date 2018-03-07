@@ -1,5 +1,6 @@
 #pragma once
 #include "Point2d.h"
+#include "ICanvas.h"
 
 #include <Windows.h>
 #include <gdiplus.h>
@@ -11,7 +12,7 @@ public:
 
 	Circle(double radius, Point2d center);
 
-	void draw(Gdiplus::Pen* pen, Gdiplus::Graphics* g);
+	void draw(ICanvas& canvas) const;
 
 	void scale(double factor);
 
