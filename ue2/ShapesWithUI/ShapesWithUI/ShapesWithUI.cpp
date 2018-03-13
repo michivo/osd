@@ -8,6 +8,11 @@
 #include <vector>
 #include <memory>
 
+GdiWindow move_test() {
+	GdiWindow w;
+	return w;
+}
+
 int main()
 {
 	std::vector<std::shared_ptr<Circle>> circles;
@@ -18,8 +23,9 @@ int main()
 			static_cast<double>((37 * i + i*i + 19) % 807)} }));
 	}
 
-	GdiWindow w;
+	GdiWindow w = move_test();
 	w.show(circles);
+
 	return 0;
 }
 

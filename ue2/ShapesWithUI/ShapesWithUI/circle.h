@@ -4,6 +4,7 @@
 
 #include <Windows.h>
 #include <gdiplus.h>
+#include <iostream>
 
 class Circle
 {
