@@ -4,27 +4,25 @@
 #include "stdafx.h"
 
 #include "GdiWindow.h"
+#include "Circle.h"
+#include "IShape.h"
+#include "Rect.h"
 
 #include <vector>
 #include <memory>
-
-GdiWindow move_test() {
-	GdiWindow w;
-	return w;
-}
+#include <math.h>
 
 int main()
 {
-	std::vector<std::shared_ptr<Circle>> circles;
-	for (int i = 0; i < 100; i++) {
-		circles.push_back(std::make_shared<Circle>(Circle{
-			static_cast<double>((3 * i + i*i*i + 22) % 227), // just some random numbers so we get a bunch of fine circles
-			Point2d{ static_cast<double>((31 * i + 17) % 1234),
-			static_cast<double>((37 * i + i*i + 19) % 807)} }));
-	}
-
-	GdiWindow w = move_test();
-	w.show(circles);
+	std::vector<std::shared_ptr<IShape>> shapes; // create list of IShape
+	shapes.push_back(std::shared_ptr<IShape> { new Circle{ 100, {300, 300} }}); // add some shapes
+	shapes.push_back(std::shared_ptr<IShape> { new Rect{ 200, 200,{ 300, 300 } }});
+	shapes.push_back(std::shared_ptr<IShape> { new Rect{ sqrt(2)*100, sqrt(2) * 100,{ 300, 300 } }});
+	shapes.push_back(std::shared_ptr<IShape> { new Circle{ sqrt(2) * 50,{ 300, 300 } }});
+	shapes.push_back(std::shared_ptr<IShape> { new Circle{ sqrt(2) * 100,{ 300, 300 } }});
+	
+	GdiWindow w; // create window
+	w.show(shapes); // show window
 
 	return 0;
 }

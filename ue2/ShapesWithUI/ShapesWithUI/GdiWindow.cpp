@@ -2,7 +2,7 @@
 
 #include "GdiWindow.h"
 
-#include "circle.h"
+#include "IShape.h"
 #include "Point2d.h"
 #include "GdiCanvas.h"
 #include "ICanvas.h"
@@ -86,7 +86,10 @@ GdiWindow & GdiWindow::operator=(GdiWindow && other)
 	return *this;
 }
 
-void GdiWindow::show(std::vector<std::shared_ptr<Circle>> shapes) {
+void GdiWindow::show(std::vector<std::shared_ptr<IShape>> shapes) {
+	
+	if (window_handle_ != nullptr)
+		throw new std::runtime_error("It is now allowed to show the same window twice!");
 
 	HINSTANCE instance = static_cast<HINSTANCE>(GetModuleHandleW(nullptr));
 	shapes_ = shapes;
@@ -180,7 +183,7 @@ void GdiWindow::redraw_shapes() {
 	EndPaint(window_handle_, &ps);
 }
 
-void GdiWindow::update_shapes(std::function<void(std::shared_ptr<Circle>)> func)
+void GdiWindow::update_shapes(std::function<void(std::shared_ptr<IShape>)> func)
 {
 	for (auto& c : shapes_) {
 		func(c);
@@ -215,7 +218,7 @@ void GdiWindow::handle_mouse_move(bool is_button_down, LPARAM param)
 		if (last_pos_valid_) {
 			auto d_x = new_x_pos - last_x_pos_;
 			auto d_y = new_y_pos - last_y_pos_;
-			update_shapes([d_x, d_y](std::shared_ptr<Circle> c) { c->move(d_x, d_y); });
+			update_shapes([d_x, d_y](std::shared_ptr<IShape> c) { c->move(d_x, d_y); });
 		}
 		last_x_pos_ = new_x_pos;
 		last_y_pos_ = new_y_pos;
@@ -230,22 +233,22 @@ void GdiWindow::handle_button_down(WPARAM w_param)
 {
 	switch (w_param) {
 	case VK_UP:
-		update_shapes([](std::shared_ptr<Circle> c) { c->move(0, -5); });
+		update_shapes([](std::shared_ptr<IShape> c) { c->move(0, -5); });
 		break;
 	case VK_DOWN:
-		update_shapes([](std::shared_ptr<Circle> c) { c->move(0, 5); });
+		update_shapes([](std::shared_ptr<IShape> c) { c->move(0, 5); });
 		break;
 	case VK_LEFT:
-		update_shapes([](std::shared_ptr<Circle> c) { c->move(-5, 0); });
+		update_shapes([](std::shared_ptr<IShape> c) { c->move(-5, 0); });
 		break;
 	case VK_RIGHT:
-		update_shapes([](std::shared_ptr<Circle> c) { c->move(5, 0); });
+		update_shapes([](std::shared_ptr<IShape> c) { c->move(5, 0); });
 		break;
 	case VK_ADD:
-		update_shapes([](std::shared_ptr<Circle> c) { c->scale(1.1); });
+		update_shapes([](std::shared_ptr<IShape> c) { c->scale(1.1); });
 		break;
 	case VK_SUBTRACT:
-		update_shapes([](std::shared_ptr<Circle> c) { c->scale(1.0 / 1.1); });
+		update_shapes([](std::shared_ptr<IShape> c) { c->scale(1.0 / 1.1); });
 		break;
 	case 'X': // x quits
 		PostQuitMessage(0);
@@ -261,6 +264,9 @@ LRESULT CALLBACK GdiWindow::wnd_proc(HWND window_handle, UINT message, WPARAM w_
 {
 	GdiWindow* self = reinterpret_cast<GdiWindow*>(GetWindowLongPtrW(window_handle, 0));
 
+	if (self == nullptr)
+		return DefWindowProc(window_handle, message, w_param, l_param);
+
 	switch (message)
 	{
 	case WM_KEYDOWN:
@@ -268,7 +274,7 @@ LRESULT CALLBACK GdiWindow::wnd_proc(HWND window_handle, UINT message, WPARAM w_
 		break;
 
 	case WM_MOUSEWHEEL:
-		self->update_shapes([w_param](std::shared_ptr<Circle> c) { c->scale(static_cast<short>(HIWORD(w_param)) < 0 ? 1.1 : 1.0 / 1.1); });
+		self->update_shapes([w_param](std::shared_ptr<IShape> c) { c->scale(static_cast<short>(HIWORD(w_param)) < 0 ? 1.1 : 1.0 / 1.1); });
 		break;
 
 	case WM_MOUSEMOVE:

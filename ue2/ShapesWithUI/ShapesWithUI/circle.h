@@ -1,12 +1,13 @@
 #pragma once
 #include "Point2d.h"
 #include "ICanvas.h"
+#include "IShape.h"
 
 #include <Windows.h>
 #include <gdiplus.h>
 #include <iostream>
 
-class Circle
+class Circle : public IShape
 {
 public:
 	Circle();
