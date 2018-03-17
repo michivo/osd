@@ -2,6 +2,7 @@
 
 #include "IShape.h"
 #include "Point2d.h"
+#include "IFancyCanvas.h"
 
 class Rect : public IShape {
 public:
@@ -10,6 +11,8 @@ public:
 	Rect(double height, double width, Point2d center);
 
 	void draw(ICanvas& canvas) const override;
+
+	void draw(IFancy_canvas& canvas) const override;
 
 	void scale(double factor) override;
 

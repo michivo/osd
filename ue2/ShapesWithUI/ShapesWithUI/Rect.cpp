@@ -3,6 +3,7 @@
 #include "Rect.h"
 #include "Point2d.h"
 #include "IShape.h"
+#include "Pen.h"
 
 Rect::Rect() : height_{ 1 }, width_{ 1 }, center_{ 0,0 }
 {}
@@ -15,6 +16,11 @@ Rect::Rect(double height, double width, Point2d center) :
 void Rect::draw(ICanvas & canvas) const
 {
 	canvas.draw_rectangle({ center_.x - width_ / 2, center_.y - height_ / 2 }, width_, height_);
+}
+
+void Rect::draw(IFancy_canvas & canvas) const
+{
+	canvas.draw_rectangle(drawing::Pen{ {255,0,0}, 0 }, { center_.x - width_ / 2, center_.y - height_ / 2 }, width_, height_);
 }
 
 void Rect::scale(double factor)

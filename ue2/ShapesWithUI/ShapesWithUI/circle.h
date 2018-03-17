@@ -16,6 +16,8 @@ public:
 
 	void draw(ICanvas& canvas) const;
 
+	void draw(IFancy_canvas& canvas) const;
+
 	void scale(double factor);
 
 	void move(double dx, double dy);

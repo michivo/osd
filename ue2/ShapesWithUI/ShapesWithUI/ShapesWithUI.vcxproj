@@ -148,10 +148,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Circle.h" />
+    <ClInclude Include="Color.h" />
     <ClInclude Include="GdiWindow.h" />
     <ClInclude Include="GdiCanvas.h" />
     <ClInclude Include="ICanvas.h" />
+    <ClInclude Include="IFancyCanvas.h" />
     <ClInclude Include="IShape.h" />
+    <ClInclude Include="Pen.h" />
     <ClInclude Include="Point2D.h" />
     <ClInclude Include="Rect.h" />
     <ClInclude Include="stdafx.h" />
@@ -161,9 +164,11 @@
   <ItemGroup>
     <ClCompile Include="Canvas.cpp" />
     <ClCompile Include="Circle.cpp" />
+    <ClCompile Include="Color.cpp" />
     <ClCompile Include="GdiCanvas.cpp" />
     <ClCompile Include="GdiWindow.cpp" />
     <ClCompile Include="IShape.cpp" />
+    <ClCompile Include="Pen.cpp" />
     <ClCompile Include="Point2D.cpp" />
     <ClCompile Include="Rect.cpp" />
     <ClCompile Include="ShapesWithUI.cpp" />

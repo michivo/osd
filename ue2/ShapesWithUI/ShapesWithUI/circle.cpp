@@ -3,6 +3,8 @@
 #include "circle.h"
 #include "Point2d.h"
 #include "ICanvas.h"
+#include "IFancyCanvas.h"
+#include "Pen.h"
 
 Circle::Circle() : radius_{ 1 }, center_{ 0,0 }
 {
@@ -15,6 +17,11 @@ Circle::Circle(double radius, Point2d center) : radius_{ radius }, center_{ cent
 void Circle::draw(ICanvas& canvas) const
 {
 	canvas.draw_ellipse(center_, 2 * radius_, 2 * radius_);
+}
+
+void Circle::draw(IFancy_canvas & canvas) const
+{
+	canvas.draw_ellipse(drawing::Pen{ {123, 123, 123}, 5 }, center_, 2 * radius_, 2 * radius_);
 }
 
 void Circle::scale(double factor)
