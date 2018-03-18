@@ -4,6 +4,8 @@
 #include "Point2d.h"
 #include "IShape.h"
 
+#include <iostream>
+
 Rect::Rect() : height_{ 1 }, width_{ 1 }, center_{ 0,0 }
 {}
 
@@ -36,4 +38,22 @@ double Rect::area() const
 double Rect::circumference() const
 {
 	return 0.0;
+}
+
+bool Rect::is_in_region(Point2d point) const
+{
+	if (point.x < (center_.x - width_ / 2) || point.x > (center_.x + width_ / 2)) {
+		return false;
+	}
+
+	if (point.y < (center_.y - height_ / 2) || point.y >(center_.y + height_ / 2)) {
+		return false;
+	}
+
+	return true;
+}
+
+void Rect::handle_click(Point2d point) const
+{
+	std::cout << "Rectangle was clicked!" << std::endl;
 }

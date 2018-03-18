@@ -2,8 +2,9 @@
 
 #include "IShape.h"
 #include "Point2d.h"
+#include "IClickable.h"
 
-class Rect : public IShape {
+class Rect : public IShape, public IClickable {
 public:
 	Rect();
 
@@ -19,8 +20,14 @@ public:
 
 	double circumference() const override;
 
+	virtual bool is_in_region(Point2d point) const override;
+
+	virtual void handle_click(Point2d point) const override;
+
+
 private:
 	double height_;
 	double width_;
 	Point2d center_;
+
 };

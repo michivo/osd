@@ -6,6 +6,7 @@
 #include "Point2d.h"
 #include "GdiCanvas.h"
 #include "ICanvas.h"
+#include "IClickable.h"
 
 #include <vector>
 #include <memory>
@@ -93,6 +94,12 @@ void GdiWindow::show(std::vector<std::shared_ptr<IShape>> shapes) {
 
 	HINSTANCE instance = static_cast<HINSTANCE>(GetModuleHandleW(nullptr));
 	shapes_ = shapes;
+	for (auto shape : shapes_) {
+		auto clickable = std::dynamic_pointer_cast<IClickable>(shape);
+		if (clickable.get() != nullptr) {
+			clickables_.push_back(clickable);
+		}
+	}
 
 	// Assert that the values returned are expected.
 	assert(instance != nullptr);
@@ -169,6 +176,7 @@ void GdiWindow::redraw_shapes() {
 	Gdiplus::Bitmap bmp(width, height);
 
 	auto g = std::shared_ptr<Gdiplus::Graphics>{ Gdiplus::Graphics::FromImage(&bmp) };
+	g->SetSmoothingMode(Gdiplus::SmoothingMode::SmoothingModeAntiAlias);
 
 	g->FillRectangle(bg_brush_.get(), 0, 0, width, height);
 	Gdi_canvas canvas{ g, pen_ };
@@ -229,6 +237,19 @@ void GdiWindow::handle_mouse_move(bool is_button_down, LPARAM param)
 	}
 }
 
+void GdiWindow::handle_mouse_click(LPARAM param)
+{
+	auto x = static_cast<double>(LOWORD(param));
+	auto y = static_cast<double>(HIWORD(param));
+	Point2d click_pos{ x, y };
+	for (auto clickable : clickables_) {
+		if (clickable->is_in_region(click_pos)) {
+			clickable->handle_click(click_pos);
+			break;
+		}
+	}
+}
+
 void GdiWindow::handle_button_down(WPARAM w_param)
 {
 	switch (w_param) {
@@ -279,6 +300,10 @@ LRESULT CALLBACK GdiWindow::wnd_proc(HWND window_handle, UINT message, WPARAM w_
 
 	case WM_MOUSEMOVE:
 		self->handle_mouse_move((w_param & MK_LBUTTON) == MK_LBUTTON, l_param);
+		break;
+
+	case WM_LBUTTONDOWN:
+		self->handle_mouse_click(l_param);
 		break;
 
 	case WM_PAINT:

@@ -2,6 +2,7 @@
 
 #include "IShape.h"
 #include "Point2d.h"
+#include "IClickable.h"
 
 #include <Windows.h>
 #include <cassert>
@@ -35,6 +36,8 @@ private:
 	std::unique_ptr<Gdiplus::Font> font_;
 	ULONG_PTR gdi_token_;
 	std::vector<std::shared_ptr<IShape>> shapes_;
+	std::vector<std::shared_ptr<IClickable>> clickables_;
+
 	short last_x_pos_;
 	short last_y_pos_;
 	bool last_pos_valid_;
@@ -46,5 +49,6 @@ private:
 	void					update_shapes(std::function<void(std::shared_ptr<IShape>)> func);
 	void					draw_captions(std::shared_ptr<Gdiplus::Graphics> g) const;
 	void					handle_mouse_move(bool is_button_down, LPARAM param);
+	void					handle_mouse_click(LPARAM param);
 	void					handle_button_down(WPARAM w_param);
 };
