@@ -170,6 +170,7 @@ void GdiWindow::redraw_shapes() {
 
 	auto g = std::shared_ptr<Gdiplus::Graphics>{ Gdiplus::Graphics::FromImage(&bmp) };
 
+	g->SetSmoothingMode(Gdiplus::SmoothingMode::SmoothingModeAntiAlias);
 	g->FillRectangle(bg_brush_.get(), 0, 0, width, height);
 	Gdi_canvas canvas{ g, pen_ };
 
