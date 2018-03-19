@@ -14,15 +14,15 @@ public:
 
 	Circle(double radius, Point2d center);
 
-	void draw(ICanvas& canvas) const;
+	void draw(ICanvas& canvas) const override;
 
-	void scale(double factor);
+	void scale(double factor) override;
 
-	void move(double dx, double dy);
+	void move(double dx, double dy) override;
 
-	double area() const;
+	double area() const override;
 
-	double circumference() const;
+	double circumference() const override;
 
 private:
 	double radius_;

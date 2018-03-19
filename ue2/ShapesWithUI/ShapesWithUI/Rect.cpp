@@ -5,7 +5,8 @@
 #include "IShape.h"
 
 Rect::Rect() : height_{ 1 }, width_{ 1 }, center_{ 0,0 }
-{}
+{
+}
 
 Rect::Rect(double height, double width, Point2d center) :
 	height_{ height }, width_{ width }, center_{ center }
@@ -30,10 +31,10 @@ void Rect::move(double dx, double dy)
 
 double Rect::area() const
 {
-	return 0.0;
+	return height_ * width_;
 }
 
 double Rect::circumference() const
 {
-	return 0.0;
+	return 2 * (height_ + width_);
 }
