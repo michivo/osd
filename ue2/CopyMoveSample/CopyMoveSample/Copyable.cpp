@@ -2,13 +2,15 @@
 #include "Copyable.h"
 
 #include <iostream>
+#include <iterator>
 #include <memory>
 
 int Copyable::instance_count_ = 0;
 int Copyable::array_size_ = 5;
 
 // Default constructor
-Copyable::Copyable() : instance_number_{ ++instance_count_ }, dummy_ptr_{ new int[array_size_] {1,2,3,4,5} }
+Copyable::Copyable() : 
+	instance_number_{ ++instance_count_ }, dummy_ptr_{ new int[array_size_] {1,2,3,4,5} }
 {
 	std::cout << "Copyable #" << instance_number_ << ": Default constructor" << std::endl;
 }
@@ -18,9 +20,11 @@ Copyable::Copyable(const Copyable & other) : instance_number_{ ++instance_count_
 {
 	// allocate array
 	dummy_ptr_ = new int[array_size_];
-	std::copy(other.dummy_ptr_, other.dummy_ptr_ + array_size_, dummy_ptr_);
+	std::copy(other.dummy_ptr_, other.dummy_ptr_ + array_size_, 
+		stdext::checked_array_iterator<int*>(dummy_ptr_, array_size_));
 
-	std::cout << "Copyable #" << instance_number_ << ": Copy constructor, copying #" << other.instance_number_ << std::endl;
+	std::cout << "Copyable #" << instance_number_ << ": Copy constructor, copying #" 
+		<< other.instance_number_ << std::endl;
 	// we do NOT want to copy the instance number, so we can better track which instances we are dealing with
 }
 
@@ -36,15 +40,20 @@ Copyable & Copyable::operator=(const Copyable & other)
 {
 	if (&other != this) { // skip copying for self-assignment
 		// copy data
-		std::copy(other.dummy_ptr_, other.dummy_ptr_ + array_size_, dummy_ptr_);
+		std::copy(other.dummy_ptr_, other.dummy_ptr_ + array_size_, 
+			stdext::checked_array_iterator<int*>(dummy_ptr_, array_size_));
 	}
 
-	std::cout << "Copyable #" << instance_number_ << ": Assignment operator, assigning #" << other.instance_number_ << std::endl;
+	std::cout << "Copyable #" << instance_number_ << ": Assignment operator, assigning #" 
+		<< other.instance_number_ << std::endl;
 
 	// we do NOT want to copy the instance number, so we can better track which instances we are dealing with
 	return *this;
 }
 
+//-------------------------------------------------------------------------------------------------
+// some test methods to illustrate copying and moving
+//-------------------------------------------------------------------------------------------------
 Copyable create_copyable() {
 	std::cout << "--- Start create_copyable" << std::endl;
 	Copyable c; // this will call the default constructor

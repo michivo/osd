@@ -2,31 +2,40 @@
 #include "Movable.h"
 
 #include <iostream>
+#include <iterator>
 
 int Movable::instance_count_ = 0;
 int Movable::array_size_ = 5;
 
-Movable::Movable() : instance_number_{ ++instance_count_ }, dummy_ptr_{ new int[array_size_] {1,2,3,4,5} }
+// default constructor
+Movable::Movable() : 
+	instance_number_{ ++instance_count_ }, dummy_ptr_{ new int[array_size_] {1,2,3,4,5} }
 {
 	std::cout << "Movable #" << instance_number_ << ": Default constructor" << std::endl;
 }
 
+// copy constructor
 Movable::Movable(const Movable & other) : instance_number_{ ++instance_count_ }
 {	// allocate array
 	dummy_ptr_ = new int[array_size_];
-	std::copy(other.dummy_ptr_, other.dummy_ptr_ + array_size_, dummy_ptr_);
+	std::copy(other.dummy_ptr_, other.dummy_ptr_ + array_size_, 
+		stdext::checked_array_iterator<int*>(dummy_ptr_, array_size_));
 
-	std::cout << "Movable #" << instance_number_ << ": Copy constructor, copying #" << other.instance_number_ << std::endl;
+	std::cout << "Movable #" << instance_number_ << ": Copy constructor, copying #" 
+		<< other.instance_number_ << std::endl;
 	// we do NOT want to copy the instance number, so we can better track which instances we are dealing with
 }
 
-Movable::Movable(Movable && other) : instance_number_{ ++instance_count_ }, dummy_ptr_{ other.dummy_ptr_ } // set dummy_ptr_ to other's dummy_ptr_
+// move constructor
+Movable::Movable(Movable && other) : 
+	instance_number_{ ++instance_count_ }, dummy_ptr_{ other.dummy_ptr_ } // set dummy_ptr_ to other's dummy_ptr_
 {
 	other.dummy_ptr_ = nullptr; // set other's dummy_ptr_ to nullptr, so other cannot do anything with it
-	std::cout << "Movable #" << instance_number_ << ": Move constructor, moving #" << other.instance_number_ << std::endl;
+	std::cout << "Movable #" << instance_number_ << ": Move constructor, moving #" 
+		<< other.instance_number_ << std::endl;
 }
 
-
+// desctructor
 Movable::~Movable()
 {
 	// free memory
@@ -34,18 +43,22 @@ Movable::~Movable()
 	std::cout << "Movable #" << instance_number_ << ": Destructor" << std::endl;
 }
 
+// copy assignment operator
 Movable & Movable::operator=(const Movable & other)
 {	
 	if (&other != this) { // skip copying for self-assignment
 	    // copy data
-		std::copy(other.dummy_ptr_, other.dummy_ptr_ + array_size_, dummy_ptr_);
+		std::copy(other.dummy_ptr_, other.dummy_ptr_ + array_size_, 
+			stdext::checked_array_iterator<int*>(dummy_ptr_, array_size_));
 	}
 
 	// we do NOT want to copy the instance number, so we can better track which instances we are dealing with
-	std::cout << "Movable #" << instance_number_ << ": Assignment operator, assigning #" << other.instance_number_ << std::endl;
+	std::cout << "Movable #" << instance_number_ << ": Assignment operator, assigning #" 
+		<< other.instance_number_ << std::endl;
 	return *this;
 }
 
+// move assignment operator
 Movable & Movable::operator=(Movable && other)
 {
 	if (this != &other) // avoid self assignment, which should not happen anyway
@@ -55,11 +68,14 @@ Movable & Movable::operator=(Movable && other)
 		other.dummy_ptr_ = nullptr; // set other's dummy_ptr_ to nullptr, so other can't do anything with it
 	}
 
-	std::cout << "Movable #" << instance_number_ << ": Move Assignment operator, assigning #" << other.instance_number_ << std::endl;
+	std::cout << "Movable #" << instance_number_ << ": Move Assignment operator, assigning #" 
+		<< other.instance_number_ << std::endl;
 	return *this;
 }
 
-
+//-------------------------------------------------------------------------------------------------
+// some test methods to illustrate copying and moving
+//-------------------------------------------------------------------------------------------------
 Movable create_movable() {
 	std::cout << "--- Start create_movable" << std::endl;
 	Movable c; // call to default constructor
