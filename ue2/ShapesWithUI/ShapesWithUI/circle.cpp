@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#include "circle.h"
+#include "Circle.h"
 #include "Point2d.h"
 #include "ICanvas.h"
 
@@ -30,10 +30,10 @@ void Circle::move(double dx, double dy)
 
 double Circle::area() const
 {
-	return radius_ * radius_ * pi_;
+	return radius_ * radius_ * pi;
 }
 
 double Circle::circumference() const
 {
-	return 2 * radius_ * pi_;
+	return 2 * radius_ * pi;
 }

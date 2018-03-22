@@ -1,7 +1,6 @@
 #pragma once
 
 #include "IShape.h"
-#include "Point2d.h"
 
 #include <Windows.h>
 #include <cassert>
@@ -16,9 +15,9 @@ public:
 	GdiWindow();
 	~GdiWindow();
 	GdiWindow(const GdiWindow&) = delete; // no copy because then two window objects would operate on one physical window
-	GdiWindow(GdiWindow&& other); // move is ok
+	GdiWindow(GdiWindow&& other) noexcept; // move is ok
 	GdiWindow& operator=(const GdiWindow&) = delete; // no copy again
-	GdiWindow& operator=(GdiWindow&&); // move is ok
+	GdiWindow& operator=(GdiWindow&&) noexcept; // move is ok
 
 	void show(std::vector<std::shared_ptr<IShape>> shapes);
 
@@ -33,13 +32,13 @@ private:
 	std::unique_ptr<Gdiplus::SolidBrush> bg_brush_;
 	std::unique_ptr<Gdiplus::SolidBrush> font_brush_;
 	std::unique_ptr<Gdiplus::Font> font_;
-	ULONG_PTR gdi_token_;
+	ULONG_PTR gdi_token_{};
 	std::vector<std::shared_ptr<IShape>> shapes_;
 	short last_x_pos_;
 	short last_y_pos_;
 	bool last_pos_valid_;
 
-	ATOM					register_class(HINSTANCE instance);
+	void					register_class(HINSTANCE instance) const;
 	BOOL					init_instance(HINSTANCE, int);
 	static LRESULT CALLBACK	wnd_proc(HWND window_handle, UINT message, WPARAM w_param, LPARAM l_param);
 	void					redraw_shapes();

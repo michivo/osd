@@ -10,7 +10,6 @@
 
 #include <vector>
 #include <memory>
-#include <math.h>
 #include <iostream>
 #include <fstream>
 

@@ -158,7 +158,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Canvas.cpp" />
+    <ClCompile Include="ICanvas.cpp" />
     <ClCompile Include="Circle.cpp" />
     <ClCompile Include="GdiCanvas.cpp" />
     <ClCompile Include="GdiWindow.cpp" />

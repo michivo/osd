@@ -2,4 +2,4 @@
 
 #include "ILamp.h"
 
-ILamp::~ILamp() { }
+ILamp::~ILamp() = default;

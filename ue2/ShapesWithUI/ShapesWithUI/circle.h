@@ -3,10 +3,6 @@
 #include "ICanvas.h"
 #include "IShape.h"
 
-#include <Windows.h>
-#include <gdiplus.h>
-#include <iostream>
-
 class Circle : public IShape
 {
 public:
@@ -29,6 +25,6 @@ private:
 
 	Point2d center_;
 
-	constexpr static double pi_ = 3.14159265358979323846;
+	constexpr static double pi = 3.14159265358979323846;
 };
 

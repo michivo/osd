@@ -3,9 +3,7 @@
 #include "GdiWindow.h"
 
 #include "IShape.h"
-#include "Point2d.h"
 #include "GdiCanvas.h"
-#include "ICanvas.h"
 
 #include <vector>
 #include <memory>
@@ -13,11 +11,11 @@
 #include <stdexcept>
 #include <string>
 
-GdiWindow::GdiWindow() : last_x_pos_{ 0 }, last_y_pos_{ 0 }, last_pos_valid_{ false },
-window_handle_{ nullptr }, h_instance_{ nullptr }
+GdiWindow::GdiWindow() : h_instance_{ nullptr },
+window_handle_{ nullptr }, last_x_pos_{ 0 }, last_y_pos_{ 0 }, last_pos_valid_{ false }
 {
 	Gdiplus::GdiplusStartupInput input;
-	Gdiplus::GdiplusStartup(&gdi_token_, &input, NULL);
+	Gdiplus::GdiplusStartup(&gdi_token_, &input, nullptr);
 
 	pen_ = std::make_shared<Gdiplus::Pen>(Gdiplus::Color{ 0, 0, 200 }, 2.0F);
 	bg_brush_ = std::make_unique<Gdiplus::SolidBrush>(Gdiplus::Color{ 255, 255, 255 });
@@ -40,7 +38,7 @@ GdiWindow::~GdiWindow()
 	window_handle_ = nullptr;
 }
 
-GdiWindow::GdiWindow(GdiWindow && other) :
+GdiWindow::GdiWindow(GdiWindow && other) noexcept :
 	pen_{ std::move(other.pen_) },
 	bg_brush_{ std::move(other.bg_brush_) },
 	font_brush_{ std::move(other.font_brush_) },
@@ -62,7 +60,7 @@ GdiWindow::GdiWindow(GdiWindow && other) :
 	SetWindowLongPtr(window_handle_, 0, reinterpret_cast<LONG_PTR>(this));
 }
 
-GdiWindow & GdiWindow::operator=(GdiWindow && other)
+GdiWindow & GdiWindow::operator=(GdiWindow && other) noexcept
 {
 	pen_ = std::move(other.pen_);
 	bg_brush_ = std::move(other.bg_brush_);
@@ -89,9 +87,9 @@ GdiWindow & GdiWindow::operator=(GdiWindow && other)
 void GdiWindow::show(std::vector<std::shared_ptr<IShape>> shapes) {
 	
 	if (window_handle_ != nullptr)
-		throw new std::runtime_error("It is now allowed to show the same window twice!");
+		throw std::runtime_error("It is now allowed to show the same window twice!");
 
-	HINSTANCE instance = static_cast<HINSTANCE>(GetModuleHandleW(nullptr));
+	const auto instance = static_cast<HINSTANCE>(GetModuleHandleW(nullptr));
 	shapes_ = shapes;
 
 	// Assert that the values returned are expected.
@@ -107,14 +105,14 @@ void GdiWindow::show(std::vector<std::shared_ptr<IShape>> shapes) {
 		throw std::runtime_error("Initialization failed!");
 	}
 
-	while (GetMessage(&msg, NULL, 0, 0))
+	while (GetMessage(&msg, nullptr, 0, 0))
 	{
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);
 	}
 }
 
-ATOM GdiWindow::register_class(HINSTANCE instance)
+void GdiWindow::register_class(HINSTANCE instance) const
 {
 	WNDCLASSEX wcex;
 
@@ -123,17 +121,16 @@ ATOM GdiWindow::register_class(HINSTANCE instance)
 	wcex.style = CS_HREDRAW | CS_VREDRAW;
 	wcex.lpfnWndProc = GdiWindow::wnd_proc;
 	wcex.cbClsExtra = 0;
-	wcex.cbWndExtra = 0;
 	wcex.hInstance = instance;
 	wcex.hIcon = 0;
-	wcex.hCursor = LoadCursor(NULL, IDC_ARROW);
+	wcex.hCursor = LoadCursor(nullptr, IDC_ARROW);
 	wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
 	wcex.lpszMenuName = L"";
 	wcex.lpszClassName = window_class_;
-	wcex.hIconSm = NULL;
+	wcex.hIconSm = nullptr;
 	wcex.cbWndExtra = sizeof(GdiWindow*);
 
-	return RegisterClassEx(&wcex);
+	RegisterClassEx(&wcex);
 }
 
 
@@ -159,13 +156,13 @@ BOOL GdiWindow::init_instance(HINSTANCE h_instance, int cmd_show)
 
 void GdiWindow::redraw_shapes() {
 	PAINTSTRUCT ps;
-	HDC hdc = BeginPaint(window_handle_, &ps);
+	BeginPaint(window_handle_, &ps);
 	Gdiplus::Graphics window_graphics(window_handle_);
 
 	RECT client_rect;
 	GetClientRect(window_handle_, &client_rect);
-	int width = client_rect.right - client_rect.left;
-	int height = client_rect.bottom - client_rect.top;
+	const int width = client_rect.right - client_rect.left;
+	const int height = client_rect.bottom - client_rect.top;
 	Gdiplus::Bitmap bmp(width, height);
 
 	auto g = std::shared_ptr<Gdiplus::Graphics>{ Gdiplus::Graphics::FromImage(&bmp) };
@@ -190,7 +187,7 @@ void GdiWindow::update_shapes(std::function<void(std::shared_ptr<IShape>)> func)
 		func(c);
 	}
 
-	RedrawWindow(window_handle_, NULL, NULL, RDW_INVALIDATE);
+	RedrawWindow(window_handle_, nullptr, nullptr, RDW_INVALIDATE);
 }
 
 void GdiWindow::draw_captions(std::shared_ptr<Gdiplus::Graphics> g) const
@@ -211,11 +208,11 @@ void GdiWindow::draw_captions(std::shared_ptr<Gdiplus::Graphics> g) const
 		font_.get(), Gdiplus::PointF(3, 35), font_brush_.get());
 }
 
-void GdiWindow::handle_mouse_move(bool is_button_down, LPARAM param)
+void GdiWindow::handle_mouse_move(bool is_button_down, const LPARAM param)
 {
 	if (is_button_down) {
-		auto new_x_pos = static_cast<short>(LOWORD(param));
-		auto new_y_pos = static_cast<short>(HIWORD(param));
+		const auto new_x_pos = static_cast<short>(LOWORD(param));
+		const auto new_y_pos = static_cast<short>(HIWORD(param));
 		if (last_pos_valid_) {
 			auto d_x = new_x_pos - last_x_pos_;
 			auto d_y = new_y_pos - last_y_pos_;
@@ -230,7 +227,7 @@ void GdiWindow::handle_mouse_move(bool is_button_down, LPARAM param)
 	}
 }
 
-void GdiWindow::handle_button_down(WPARAM w_param)
+void GdiWindow::handle_button_down(const WPARAM w_param)
 {
 	switch (w_param) {
 	case VK_UP:
