@@ -286,3 +286,4 @@ __pycache__/
 *.btm.cs
 *.odx.cs
 *.xsd.cs
+/ue3/Lamps/Lamps.zip

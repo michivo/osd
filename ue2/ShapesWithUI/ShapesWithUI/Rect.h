@@ -1,9 +1,9 @@
 #pragma once
 
-#include "IShape.h"
 #include "Point2d.h"
+#include "IDrawableShape.h"
 
-class Rect : public IShape {
+class Rect : public IDrawableShape {
 public:
 	Rect();
 

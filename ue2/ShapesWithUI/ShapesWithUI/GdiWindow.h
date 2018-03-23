@@ -1,12 +1,11 @@
 #pragma once
 
-#include "IShape.h"
-
 #include <Windows.h>
 #include <cassert>
 #include <functional>
 #include <vector>
 #include <memory>
+#include "IDrawableShape.h"
 
 constexpr int MAX_LOADSTRING = 100;
 
@@ -19,7 +18,7 @@ public:
 	GdiWindow& operator=(const GdiWindow&) = delete; // no copy again
 	GdiWindow& operator=(GdiWindow&&) noexcept; // move is ok
 
-	void show(std::vector<std::shared_ptr<IShape>> shapes);
+	void show(std::vector<std::shared_ptr<IDrawableShape>> shapes);
 
 private:
 
@@ -33,7 +32,7 @@ private:
 	std::unique_ptr<Gdiplus::SolidBrush> font_brush_;
 	std::unique_ptr<Gdiplus::Font> font_;
 	ULONG_PTR gdi_token_{};
-	std::vector<std::shared_ptr<IShape>> shapes_;
+	std::vector<std::shared_ptr<IDrawableShape>> shapes_;
 	short last_x_pos_;
 	short last_y_pos_;
 	bool last_pos_valid_;
@@ -42,7 +41,7 @@ private:
 	BOOL					init_instance(HINSTANCE, int);
 	static LRESULT CALLBACK	wnd_proc(HWND window_handle, UINT message, WPARAM w_param, LPARAM l_param);
 	void					redraw_shapes();
-	void					update_shapes(std::function<void(std::shared_ptr<IShape>)> func);
+	void					update_shapes(std::function<void(std::shared_ptr<IDrawableShape>)> func);
 	void					draw_captions(std::shared_ptr<Gdiplus::Graphics> g) const;
 	void					handle_mouse_move(bool is_button_down, LPARAM param);
 	void					handle_button_down(WPARAM w_param);

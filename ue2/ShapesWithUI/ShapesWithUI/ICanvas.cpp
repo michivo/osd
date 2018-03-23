@@ -2,4 +2,4 @@
 
 #include "ICanvas.h"
 
-ICanvas::~ICanvas() = default
+ICanvas::~ICanvas() = default;

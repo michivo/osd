@@ -4,8 +4,6 @@
 
 class IShape {
 public:
-	virtual void draw(ICanvas& canvas) const = 0;
-
 	virtual void scale(double factor) = 0;
 
 	virtual void move(double dx, double dy) = 0;
