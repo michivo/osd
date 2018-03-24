@@ -120,7 +120,7 @@ void GdiWindow::register_class(HINSTANCE instance) const
 	wcex.lpfnWndProc = GdiWindow::wnd_proc;
 	wcex.cbClsExtra = 0;
 	wcex.hInstance = instance;
-	wcex.hIcon = 0;
+	wcex.hIcon = nullptr;
 	wcex.hCursor = LoadCursor(nullptr, IDC_ARROW);
 	wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
 	wcex.lpszMenuName = L"";
