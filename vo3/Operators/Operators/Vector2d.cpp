@@ -72,6 +72,16 @@ void Vector2d::operator()()
 	y_ /= norm;
 }
 
+double Vector2d::operator[](int idx) const
+{
+	if (idx == 0)
+		return x_;
+	if (idx == 1)
+		return y_;
+
+	throw std::runtime_error("Index out of range");
+}
+
 Vector2d operator+(Vector2d lhs, const Vector2d& rhs)
 {
 	lhs += rhs;
