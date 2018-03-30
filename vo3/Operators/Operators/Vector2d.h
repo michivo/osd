@@ -19,7 +19,7 @@ public:
 
 	explicit operator double() const; //[1] just for demo purposes - converts to the euclidian norm
 	void operator()(); //[2] just for demo purposes - normalizes the vector
-	double operator[](int idx) const;//[3] just for demo purposes - array subscript operator
+	double operator[](int idx) const noexcept(false);//[3] just for demo purposes - array subscript operator
 
 	friend std::ostream& operator<<(std::ostream& os, const Vector2d& rhs); // friend for printing
 	                                                                        // to ostream like cout

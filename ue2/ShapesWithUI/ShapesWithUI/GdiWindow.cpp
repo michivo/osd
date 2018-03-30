@@ -117,7 +117,7 @@ void GdiWindow::register_class(HINSTANCE instance) const
 	wcex.cbSize = sizeof(WNDCLASSEX);
 
 	wcex.style = CS_HREDRAW | CS_VREDRAW;
-	wcex.lpfnWndProc = GdiWindow::wnd_proc;
+	wcex.lpfnWndProc = wnd_proc;
 	wcex.cbClsExtra = 0;
 	wcex.hInstance = instance;
 	wcex.hIcon = nullptr;

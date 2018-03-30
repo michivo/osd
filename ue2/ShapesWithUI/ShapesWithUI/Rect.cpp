@@ -3,6 +3,7 @@
 #include "Rect.h"
 #include "Point2d.h"
 #include "IShape.h"
+#include <stdexcept>
 
 Rect::Rect() : height_{ 1 }, width_{ 1 }, center_{ 0,0 }
 {
@@ -11,6 +12,8 @@ Rect::Rect() : height_{ 1 }, width_{ 1 }, center_{ 0,0 }
 Rect::Rect(double height, double width, Point2d center) :
 	height_{ height }, width_{ width }, center_{ center }
 {
+	if (height_ < 0 || width_ < 0)
+		throw std::invalid_argument("Height and width must not be smaller than zero!");
 }
 
 void Rect::draw(ICanvas & canvas) const
