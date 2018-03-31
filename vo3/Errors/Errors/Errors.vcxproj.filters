@@ -21,12 +21,30 @@
     <ClInclude Include="targetver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="NegativeValueException.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BadValueException.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Dummy.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Errors.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NegativeValueException.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BadValueException.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Dummy.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

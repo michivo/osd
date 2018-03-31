@@ -147,11 +147,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="BadValueException.h" />
+    <ClInclude Include="Dummy.h" />
+    <ClInclude Include="NegativeValueException.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BadValueException.cpp" />
+    <ClCompile Include="Dummy.cpp" />
     <ClCompile Include="Errors.cpp" />
+    <ClCompile Include="NegativeValueException.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
