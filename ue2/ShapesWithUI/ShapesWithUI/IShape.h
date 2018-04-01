@@ -1,7 +1,5 @@
 #pragma once
 
-#include "ICanvas.h"
-
 class IShape {
 public:
 	virtual void scale(double factor) = 0;

@@ -11,9 +11,6 @@ Gdi_canvas::Gdi_canvas(std::shared_ptr<Gdiplus::Graphics> graphics,
 
 void Gdi_canvas::draw_ellipse(Point2d center, double height, double width)
 {
-	if (height < 0 || width < 0)
-		throw std::invalid_argument("Height and width must not be smaller than zero!");
-
 	graphics_->DrawEllipse(pen_.get(), static_cast<Gdiplus::REAL>(center.x - width/2.0),
 		static_cast<Gdiplus::REAL>(center.y - height/2.0),
 		static_cast<Gdiplus::REAL>(width),
@@ -22,9 +19,6 @@ void Gdi_canvas::draw_ellipse(Point2d center, double height, double width)
 
 void Gdi_canvas::draw_rectangle(Point2d top_left, double height, double width)
 {
-	if (height < 0 || width < 0)
-		throw std::invalid_argument("Height and width must not be smaller than zero!");
-
 	graphics_->DrawRectangle(pen_.get(),
 		static_cast<Gdiplus::REAL>(top_left.x),
 		static_cast<Gdiplus::REAL>(top_left.y),
@@ -34,9 +28,6 @@ void Gdi_canvas::draw_rectangle(Point2d top_left, double height, double width)
 
 void Gdi_canvas::draw_arc(Point2d center, double height, double width, double start_angle, double sweep_angle)
 {
-	if (height < 0 || width < 0)
-		throw std::invalid_argument("Height and width must not be smaller than zero!");
-
 	graphics_->DrawArc(pen_.get(), static_cast<Gdiplus::REAL>(center.x - width / 2.0),
 		static_cast<Gdiplus::REAL>(center.y - height / 2.0),
 		static_cast<Gdiplus::REAL>(width),

@@ -3,7 +3,6 @@
 #include "Circle.h"
 #include "Point2d.h"
 #include "ICanvas.h"
-#include <stdexcept>
 
 Circle::Circle() : radius_{ 1 }, center_{ 0,0 }
 {
@@ -11,8 +10,6 @@ Circle::Circle() : radius_{ 1 }, center_{ 0,0 }
 
 Circle::Circle(double radius, Point2d center) : radius_{ radius }, center_{ center }
 {
-	if (radius_< 0)
-		throw std::invalid_argument("Radius must not be smaller than zero!");
 }
 
 void Circle::draw(ICanvas& canvas) const

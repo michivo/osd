@@ -84,9 +84,6 @@ GdiWindow & GdiWindow::operator=(GdiWindow && other) noexcept
 
 void GdiWindow::show(std::vector<std::shared_ptr<IDrawableShape>> shapes) {
 	
-	if (window_handle_ != nullptr)
-		throw std::runtime_error("It is now allowed to show the same window twice!");
-
 	const auto instance = static_cast<HINSTANCE>(GetModuleHandleW(nullptr));
 	shapes_ = shapes;
 
