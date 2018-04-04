@@ -17,15 +17,19 @@
 int main()
 {
 	std::vector<std::shared_ptr<IDrawableShape>> shapes; // create list of IShape
-	shapes.push_back(std::shared_ptr<IDrawableShape> { new Circle{ 100, {300, 300} }}); // add some shapes
-	shapes.push_back(std::shared_ptr<IDrawableShape> { new Rect{ sqrt(2) * 100, sqrt(2) * 100,{ 300, 300 } }});
-	shapes.push_back(std::shared_ptr<IDrawableShape> { new Circle{ sqrt(2) * 50,{ 300, 300 } }});
-	shapes.push_back(std::shared_ptr<IDrawableShape> { new Circle{ sqrt(2) * 100,{ 300, 300 } }});
+	shapes.push_back(std::static_pointer_cast<IDrawableShape>(
+		std::make_shared<Circle>(Circle{100, {300, 300}})));
+	shapes.push_back(std::static_pointer_cast<IDrawableShape>(
+		std::make_shared<Rect>(Rect{ sqrt(2) * 100, sqrt(2) * 100,{ 300, 300 } })));
+	shapes.push_back(std::static_pointer_cast<IDrawableShape>(
+		std::make_shared<Circle>(Circle{ sqrt(2) * 50,{ 300, 300 } })));
+	shapes.push_back(std::static_pointer_cast<IDrawableShape>(
+		std::make_shared<Circle>(Circle{ sqrt(2) * 100,{ 300, 300 } })));
 
-	//GdiWindow w; // create window
-	//w.show(shapes); // show window
+	GdiWindow w; // create window
+	w.show(shapes); // show window
 
-	std::ofstream output{ "test.html", std::ofstream::out | std::ofstream::trunc };
+	/*std::ofstream output{ "test.html", std::ofstream::out | std::ofstream::trunc };
 
 	Svg_canvas c{ output };
 	c.write_header(1000, 1000);
@@ -35,7 +39,7 @@ int main()
 	}
 	c.write_footer();
 
-	output.close();
+	output.close();*/
 
 	return 0;
 }
