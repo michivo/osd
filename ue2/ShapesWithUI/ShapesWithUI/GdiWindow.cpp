@@ -32,7 +32,10 @@ GdiWindow::~GdiWindow()
 		gdi_token_ = 0;
 	}
 
+	DeleteObject(h_instance_);
 	h_instance_ = nullptr;
+
+	DeleteObject(window_handle_);
 	window_handle_ = nullptr;
 }
 
