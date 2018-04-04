@@ -148,6 +148,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="BadValueException.h" />
+    <ClInclude Include="ClassHierarchy.h" />
     <ClInclude Include="Dummy.h" />
     <ClInclude Include="NegativeValueException.h" />
     <ClInclude Include="stdafx.h" />
