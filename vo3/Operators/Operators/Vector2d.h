@@ -38,3 +38,5 @@ Vector2d operator*(double lhs, Vector2d rhs);
 Vector2d operator/(double lhs, Vector2d rhs);
 Vector2d operator*(Vector2d lhs, double rhs);
 Vector2d operator/(Vector2d lhs, double rhs);
+
+double operator*(const Vector2d& lhs, const Vector2d& rhs); // dot/scalar product

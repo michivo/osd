@@ -118,6 +118,11 @@ Vector2d operator/(Vector2d lhs, double rhs)
 	return lhs;
 }
 
+double operator*(const Vector2d& lhs, const Vector2d& rhs)
+{
+	return lhs.get_x() * rhs.get_x() + lhs.get_y() * rhs.get_y();
+}
+
 
 std::ostream& operator<<(std::ostream& os, const Vector2d& rhs)
 {
