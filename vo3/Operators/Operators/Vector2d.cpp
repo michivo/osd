@@ -72,7 +72,7 @@ void Vector2d::operator()()
 	y_ /= norm;
 }
 
-double Vector2d::operator[](int idx) const noexcept(false)
+double Vector2d::operator[](int idx) const
 {
 	if (idx == 0)
 		return x_;
