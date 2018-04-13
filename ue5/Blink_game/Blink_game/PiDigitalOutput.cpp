@@ -1,16 +1,16 @@
 #include "PiDigitalOutput.h"
-#include "WiringWrapper.h"
+#include "PiIoManager.h"
 
 void Pi_digital_output::set_state(State state)
 {
-	Wiring_wrapper::instance().digital_write(pin_, state);
+	Pi_io_manager::instance().digital_write(pin_, state);
 }
 
 State Pi_digital_output::get_state()
 {
-	return Wiring_wrapper::instance().digital_read(pin_);
+	return Pi_io_manager::instance().digital_read(pin_);
 }
 
-Pi_digital_output::Pi_digital_output(Pin pin) : pin_{ pin }
+Pi_digital_output::Pi_digital_output(Pin pin) : pin_ { Pi_io_manager::instance().register_output(pin) }
 {
 }

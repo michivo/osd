@@ -57,7 +57,7 @@
     <ClCompile Include="PiIoManager.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="PiDigitalInput.cpp" />
-    <ClCompile Include="WiringWrapper.cpp" />
+    <ClCompile Include="PinHandle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IDigitalInput.h" />
@@ -67,7 +67,7 @@
     <ClInclude Include="PiDigitalInput.h" />
     <ClInclude Include="Pin.h" />
     <ClInclude Include="Enums.h" />
-    <ClInclude Include="WiringWrapper.h" />
+    <ClInclude Include="PinHandle.h" />
   </ItemGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
     <ClCompile>

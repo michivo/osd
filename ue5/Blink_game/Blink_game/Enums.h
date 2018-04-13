@@ -6,3 +6,5 @@ enum class Mode { in = 0, out = 1, pwm = 2 };
 
 enum class Edge_type { falling, rising, both, setup };
 
+enum class Pull_up_down { off = 0, down = 1, up = 2 };
+

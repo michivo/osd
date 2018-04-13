@@ -2,27 +2,21 @@
 #include "IDigitalInput.h"
 
 #include "Pin.h"
-#include <functional>
+#include "PinHandle.h"
 
-class Wiring_wrapper;
-class Pi_io_manager;
+#include <functional>
 
 class Pi_digital_input : public IDigital_input
 {
 public:
-	State read() override;
+	Pi_digital_input(Pin pin, Pull_up_down pud, Edge_type edge, 
+		std::function<void(Pin)> value_change_handler);
 
-	void set_interrupt_handler(std::function<void()> handler);
+	State read() override;
 	
 	Pi_digital_input(Pi_digital_input&& other) = default;
 
 private:
-	Pi_digital_input(Pin pin);
-	void on_interrupt();
-	
-	Pin pin_;
-	std::function<void()> handler_;
-
-	friend Pi_io_manager;
+	Pin_handle pin_;
 };
 

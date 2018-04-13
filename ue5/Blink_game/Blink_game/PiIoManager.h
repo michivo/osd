@@ -1,12 +1,11 @@
 #pragma once
 #include "Pin.h"
 #include "Enums.h"
+#include "PinHandle.h"
 
-#include <memory>
 #include <array>
 #include <functional>
-#include "PiDigitalOutput.h"
-#include "PiDigitalInput.h"
+
 
 class Pi_io_manager
 {
@@ -17,28 +16,40 @@ public:
 		return instance_;
 	}
 
-	void add_input(Pin pin, Edge_type edge_tye = Edge_type::rising);
-	void add_output(Pin pin);
-
-	Pi_digital_input& get_input(Pin pin);
-	Pi_digital_output& get_output(Pin pin);
-
 	Pi_io_manager(Pi_io_manager &&other) = default;
-	
+
+	Pin_handle register_output(Pin pin);
+	Pin_handle register_input(Pin pin, std::function<void(Pin)> event_handler, 
+		Pull_up_down pud = Pull_up_down::up, Edge_type edge_type = Edge_type::rising);
+
+	State digital_read(const Pin_handle& pin) const;
+	void digital_write(const Pin_handle& pin, State state) const;
+
 private:
 	Pi_io_manager();
 
+	static void setup_wiring_pi();
+	void release(Pin pin);
 	void assert_is_free(Pin pin);
-
 	void handle_interrupt(Pin pin);
 
+	static void set_callback(Pin pin, Edge_type edge_type, void(*callback)(void));
+	static void set_pin_mode(Pin pin, Mode mode);
+	static void set_pull_up_down(Pin pin, Pull_up_down pud);
 	static void forward_interrupt(Pin pin);
 
-	static constexpr int io_count_ = 27;
+	static constexpr int io_count = 27;
 
-	std::array<void(*)(), io_count_> interrupt_handlers_;
+	std::array<void(*)(), io_count> interrupt_handlers_{}; // for 'incoming' interrupts. those are forwarded to event handlers
+	std::array<std::function<void(Pin)>, io_count> event_handlers_;
+	std::array<bool, io_count> ios_{};
 
-	std::array<std::unique_ptr<Pi_digital_input>, io_count_> inputs_;
-	std::array<std::unique_ptr<Pi_digital_output>, io_count_> outputs_;
+	enum class Number_scheme { bcm, wiring_pi, physical };
+
+	constexpr static Number_scheme scheme_ = Number_scheme::bcm;
+	static constexpr int map_pin(Pin pin);
+	static constexpr int map_edge_type(Edge_type edge);
+	static constexpr int map_mode(Mode mode);
+	static constexpr int map_pud(Pull_up_down pud);
 };
 
