@@ -1,10 +1,9 @@
 #include "PiIoManager.h"
 
-#include "WiringWrapper.h"
-
 #include <memory>
 #include <sstream>
-#include <functional>
+#include <wiringPi.h>
+#include "PinHandle.h"
 
 Pi_io_manager::Pi_io_manager()
 {
@@ -35,56 +34,51 @@ Pi_io_manager::Pi_io_manager()
 	interrupt_handlers_[24] = []() { forward_interrupt(Pin::bcm_24); };
 	interrupt_handlers_[25] = []() { forward_interrupt(Pin::bcm_25); };
 	interrupt_handlers_[26] = []() { forward_interrupt(Pin::bcm_26); };
-}
-
-void Pi_io_manager::add_input(Pin pin, Edge_type edge_tye)
-{
-	assert_is_free(pin);
-
-	Wiring_wrapper::instance().set_pin_mode(pin, Mode::in);
-	const auto pin_number = static_cast<int>(pin);
-	inputs_[pin_number] = std::make_unique<Pi_digital_input>(Pi_digital_input{ pin });
-	Wiring_wrapper::instance().set_callback(pin, edge_tye, interrupt_handlers_[pin_number]);
-}
-
-void Pi_io_manager::add_output(Pin pin)
-{
-	assert_is_free(pin);
-
-	Wiring_wrapper::instance().set_pin_mode(pin, Mode::out);
-	outputs_[static_cast<int>(pin)] = std::make_unique<Pi_digital_output>(Pi_digital_output{ pin });
-}
-
-Pi_digital_input& Pi_io_manager::get_input(Pin pin)
-{
-	const auto pin_number = static_cast<int>(pin);
-	if (!inputs_[pin_number])
+	for (auto i = 0; i < io_count; i++)
 	{
-		std::ostringstream err_message;
-		err_message << "Pin " << pin_number << " is not configured as input!";
-		throw std::logic_error(err_message.str());
+		ios_[i] = false;
 	}
 
-	return *inputs_[pin_number];
+	setup_wiring_pi();
 }
 
-Pi_digital_output& Pi_io_manager::get_output(Pin pin)
+void Pi_io_manager::setup_wiring_pi()
 {
-	const auto pin_number = static_cast<int>(pin);
-	if (!outputs_[pin_number])
+	auto result = 0;
+	switch (scheme_)
 	{
-		std::ostringstream err_message;
-		err_message << "Pin " << pin_number << " is not configured as output!";
-		throw std::logic_error(err_message.str());
+	case Number_scheme::wiring_pi:
+		result = wiringPiSetup();
+		break;
+	case Number_scheme::physical:
+		result = wiringPiSetupPhys();
+		break;
+	default:
+		result = wiringPiSetupGpio();
 	}
 
-	return *outputs_[pin_number];
+	if (result < 0) {
+		std::ostringstream err_message;
+		err_message << "Error setting up wiring pi, failed with error code " << result;
+		throw std::runtime_error(err_message.str());
+	}
+}
+
+void Pi_io_manager::release(Pin pin)
+{
+	ios_[static_cast<int>(pin)] = false;
 }
 
 void Pi_io_manager::assert_is_free(Pin pin)
 {
 	const auto pin_number = static_cast<int>(pin);
-	if (inputs_[pin_number] || outputs_[pin_number])
+	if(pin_number < 0 || pin_number > 26)
+	{
+		std::ostringstream err_message;
+		err_message << "Pin number " << pin_number << " is invalid!";
+		throw std::logic_error(err_message.str());
+	}
+	if (ios_[pin_number])
 	{
 		std::ostringstream err_message;
 		err_message << "Pin " << pin_number << " is already in use!";
@@ -95,18 +89,95 @@ void Pi_io_manager::assert_is_free(Pin pin)
 void Pi_io_manager::handle_interrupt(Pin pin)
 {
 	const auto pin_number = static_cast<int>(pin);
-	if (!inputs_[pin_number])
-	{
-		std::ostringstream err_message;
-		err_message << "Pin " << pin_number << " is not configured as input!";
-		throw std::logic_error(err_message.str());
-	}
+	if (!ios_[pin_number] || !event_handlers_[pin_number])
+		return;
 
-	inputs_[pin_number]->on_interrupt();
+	event_handlers_[pin_number](pin);
 }
 
 
 void Pi_io_manager::forward_interrupt(Pin pin)
 {
 	instance().handle_interrupt(pin);
+}
+
+State Pi_io_manager::digital_read(const Pin_handle& pin) const
+{
+	return State(digitalRead(map_pin(pin.get_pin())));
+}
+
+void Pi_io_manager::digital_write(const Pin_handle& pin, State state) const
+{
+	digitalWrite(map_pin(pin.get_pin()), static_cast<int>(state));
+}
+
+void Pi_io_manager::set_callback(Pin pin, Edge_type edge_type, void(*callback)(void))
+{
+	wiringPiISR(map_pin(pin), map_edge_type(edge_type), callback);
+}
+
+void Pi_io_manager::set_pin_mode(Pin pin, Mode mode)
+{
+	pinMode(map_pin(pin), map_mode(mode));
+}
+
+void Pi_io_manager::set_pull_up_down(Pin pin, Pull_up_down pud)
+{
+	pullUpDnControl(map_pin(pin), map_pud(pud));
+}
+
+constexpr int Pi_io_manager::map_pin(Pin pin)
+{
+	return scheme_ == Number_scheme::wiring_pi ? wiring_pi_number(pin) :
+		scheme_ == Number_scheme::physical ? physical_number(pin) :
+		bcm_number(pin);
+}
+
+constexpr int Pi_io_manager::map_edge_type(Edge_type edge)
+{
+	return edge == Edge_type::rising ? INT_EDGE_RISING :
+		edge == Edge_type::falling ? INT_EDGE_FALLING :
+		edge == Edge_type::both ? INT_EDGE_BOTH :
+		INT_EDGE_SETUP;
+}
+
+constexpr int Pi_io_manager::map_mode(Mode mode)
+{
+	return mode == Mode::in ? INPUT :
+		mode == Mode::out ? OUTPUT :
+		PWM_OUTPUT;
+}
+
+constexpr int Pi_io_manager::map_pud(Pull_up_down pud)
+{
+	return pud == Pull_up_down::off ? PUD_OFF :
+		pud == Pull_up_down::down ? PUD_DOWN : 
+		PUD_UP;
+}
+
+Pin_handle Pi_io_manager::register_output(Pin pin)
+{
+	assert_is_free(pin);
+
+	const auto pin_number = static_cast<int>(pin);
+
+	Pin_handle result{ pin, [this](Pin p) { release(p); } };
+	set_pin_mode(pin, Mode::out);
+	ios_[pin_number] = true;
+	return result;
+}
+
+Pin_handle Pi_io_manager::register_input(Pin pin, std::function<void(Pin)> event_handler,
+	Pull_up_down pud, Edge_type edge_type)
+{
+	assert_is_free(pin);
+
+	const auto pin_number = static_cast<int>(pin);
+	set_pin_mode(pin, Mode::in);
+	set_pull_up_down(pin, pud);
+
+	Pin_handle result{ pin, [this](Pin p) { release(p); } };
+	ios_[pin_number] = true;
+	event_handlers_[pin_number] = event_handler;
+	return result;
 }
