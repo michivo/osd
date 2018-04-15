@@ -74,12 +74,12 @@ namespace pi_io {
 
 	void Pi_io_manager::release(Pin pin)
 	{
-		ios_[static_cast<int>(pin)] = false;
+		ios_[to_underlying(pin)] = false;
 	}
 
 	void Pi_io_manager::assert_is_free(Pin pin)
 	{
-		const auto pin_number = static_cast<int>(pin);
+		const auto pin_number = to_underlying(pin);
 		if (pin_number < 0 || pin_number >= io_count)
 		{
 			std::ostringstream err_message;
@@ -96,7 +96,7 @@ namespace pi_io {
 
 	void Pi_io_manager::handle_interrupt(Pin pin)
 	{
-		const auto pin_number = static_cast<int>(pin);
+		const auto pin_number = to_underlying(pin);
 
 		if (!ios_[pin_number] || !event_handlers_[pin_number])
 			return;
@@ -117,7 +117,7 @@ namespace pi_io {
 
 	void Pi_io_manager::digital_write(const Pin_handle& pin, State state) const
 	{
-		digitalWrite(map_pin(pin.get_pin()), static_cast<int>(state));
+		digitalWrite(map_pin(pin.get_pin()), to_underlying(state));
 	}
 
 	void Pi_io_manager::set_callback(Pin pin, Edge_type edge_type, void(*callback)(void))
@@ -127,7 +127,7 @@ namespace pi_io {
 		{
 			std::ostringstream error_message;
 			error_message << "Error setting up interrupt handler for pin ";
-			error_message << static_cast<int>(pin);
+			error_message << to_underlying(pin);
 			throw std::runtime_error(error_message.str());
 		}
 	}
@@ -175,7 +175,7 @@ namespace pi_io {
 	{
 		assert_is_free(pin);
 
-		const auto pin_number = static_cast<int>(pin);
+		const auto pin_number = to_underlying(pin);
 
 		Pin_handle result{ pin };
 		set_pin_mode(pin, Mode::out);
@@ -188,7 +188,7 @@ namespace pi_io {
 	{
 		assert_is_free(pin);
 
-		const auto pin_number = static_cast<int>(pin);
+		const auto pin_number = to_underlying(pin);
 		set_pin_mode(pin, Mode::in);
 		set_pull_up_down(pin, pud);
 		if(event_handler)

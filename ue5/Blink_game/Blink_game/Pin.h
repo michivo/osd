@@ -1,4 +1,5 @@
 #pragma once
+#include <type_traits>
 
 namespace pi_io {
 
@@ -148,19 +149,25 @@ namespace pi_io {
 		{ 2, 13}
 	};
 
-	constexpr int bcm_number(Pin pin)
+	template<typename T>
+	constexpr auto to_underlying(T t) noexcept
 	{
-		return static_cast<int>(pin);
+		return static_cast<std::underlying_type_t<T>>(t);
+	}
+
+	constexpr int bcm_number(Pin pin) noexcept
+	{
+		return to_underlying(pin);
 	}
 
 	constexpr int wiring_pi_number(Pin pin)
 	{
-		return mappings[static_cast<int>(pin)][0];
+		return mappings[to_underlying(pin)][0];
 	}
 
 	constexpr int physical_number(Pin pin)
 	{
-		return mappings[static_cast<int>(pin)][1];
+		return mappings[to_underlying(pin)][1];
 	}
 
 }
