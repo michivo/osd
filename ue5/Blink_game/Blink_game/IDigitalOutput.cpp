@@ -1,3 +1,7 @@
 #include "IDigitalOutput.h"
 
-IDigital_output::~IDigital_output() = default;
+namespace pi_io {
+
+	IDigital_output::~IDigital_output() = default;
+
+}

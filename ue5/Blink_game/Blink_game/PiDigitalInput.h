@@ -6,17 +6,20 @@
 
 #include <functional>
 
-class Pi_digital_input : public IDigital_input
-{
-public:
-	Pi_digital_input(Pin pin, Pull_up_down pud, Edge_type edge, 
-		std::function<void(Pin)> value_change_handler);
+namespace pi_io {
 
-	State read() override;
-	
-	Pi_digital_input(Pi_digital_input&& other) = default;
+	class Pi_digital_input : public IDigital_input
+	{
+	public:
+		Pi_digital_input(Pin pin, Pull_up_down pud = Pull_up_down::up, Edge_type edge = Edge_type::rising,
+			std::function<void(Pin)> value_change_handler = nullptr);
 
-private:
-	Pin_handle pin_;
-};
+		State read() override;
 
+		Pi_digital_input(Pi_digital_input&& other) = default;
+
+	private:
+		Pin_handle pin_;
+	};
+
+}

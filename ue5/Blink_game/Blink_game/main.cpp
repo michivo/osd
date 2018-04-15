@@ -1,10 +1,12 @@
-#include "PiDigitalOutput.h"
+#include "Pin.h"
 #include "PiDigitalInput.h"
+#include "PiDigitalOutput.h"
 
 #include <wiringPi.h>
 
 #include <iostream>
 
+using namespace pi_io;
 
 int main(void)
 {

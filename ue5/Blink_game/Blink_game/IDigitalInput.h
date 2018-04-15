@@ -1,10 +1,14 @@
 #pragma once
 #include "Enums.h"
 
-class IDigital_input
-{
-public:
-	virtual State read() = 0;
+namespace pi_io {
 
-	virtual ~IDigital_input() = 0;
-};
+	class IDigital_input
+	{
+	public:
+		virtual State read() = 0;
+
+		virtual ~IDigital_input() = 0;
+	};
+
+}
