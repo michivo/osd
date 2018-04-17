@@ -71,15 +71,16 @@ void wait_for_button()
 	std::condition_variable cv;
 	bool is_ready;
 
+	std::unique_lock<std::mutex> lock(mtx);
+
 	const std::function<void(Pin)> button_handler = [&](Pin)
 	{
 		is_ready = true;
-		std::unique_lock<std::mutex> lock(mtx); 
+		std::unique_lock<std::mutex> button_lock(mtx); 
 		cv.notify_one();
 	};
 
 	Pi_digital_input input{ Pin::bcm_22, Pull_up_down::off, Edge_type::rising, button_handler };
-	std::unique_lock<std::mutex> lock(mtx);
 	while (!is_ready)
 	{
 		cv.wait(lock);
