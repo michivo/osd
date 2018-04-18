@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27428.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "InputHandling", "InputHandling\InputHandling.vcxproj", "{889B4ADA-4C41-4F27-99BE-B5E8A7C8D7AA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|ARM = Debug|ARM
+		Release|ARM = Release|ARM
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{889B4ADA-4C41-4F27-99BE-B5E8A7C8D7AA}.Debug|ARM.ActiveCfg = Debug|ARM
+		{889B4ADA-4C41-4F27-99BE-B5E8A7C8D7AA}.Debug|ARM.Build.0 = Debug|ARM
+		{889B4ADA-4C41-4F27-99BE-B5E8A7C8D7AA}.Release|ARM.ActiveCfg = Release|ARM
+		{889B4ADA-4C41-4F27-99BE-B5E8A7C8D7AA}.Release|ARM.Build.0 = Release|ARM
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7D2349AA-AB51-4F04-86AF-175E5A1BF63A}
+	EndGlobalSection
+EndGlobal

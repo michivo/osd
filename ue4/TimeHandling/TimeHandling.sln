@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27428.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TimeHandling", "TimeHandling\TimeHandling.vcxproj", "{6BBA4A66-416A-4020-8AEB-26CF882C9383}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|ARM = Debug|ARM
+		Release|ARM = Release|ARM
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6BBA4A66-416A-4020-8AEB-26CF882C9383}.Debug|ARM.ActiveCfg = Debug|ARM
+		{6BBA4A66-416A-4020-8AEB-26CF882C9383}.Debug|ARM.Build.0 = Debug|ARM
+		{6BBA4A66-416A-4020-8AEB-26CF882C9383}.Release|ARM.ActiveCfg = Release|ARM
+		{6BBA4A66-416A-4020-8AEB-26CF882C9383}.Release|ARM.Build.0 = Release|ARM
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {CD881DD0-4A7C-41D3-80EF-00FF9C365646}
+	EndGlobalSection
+EndGlobal
