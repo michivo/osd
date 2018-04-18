@@ -58,6 +58,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="PiDigitalInput.cpp" />
     <ClCompile Include="PinHandle.cpp" />
+    <ClCompile Include="Player.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IDigitalInput.h" />
@@ -68,6 +69,7 @@
     <ClInclude Include="Pin.h" />
     <ClInclude Include="Enums.h" />
     <ClInclude Include="PinHandle.h" />
+    <ClInclude Include="Player.h" />
   </ItemGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
     <ClCompile>
