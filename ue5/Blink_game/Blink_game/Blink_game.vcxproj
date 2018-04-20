@@ -59,8 +59,11 @@
     <ClCompile Include="PiDigitalInput.cpp" />
     <ClCompile Include="PinHandle.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="ReactionGame.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="PinConfig.h" />
+    <ClInclude Include="ReactionGame.h" />
     <ClInclude Include="IDigitalInput.h" />
     <ClInclude Include="IDigitalOutput.h" />
     <ClInclude Include="PiDigitalOutput.h" />

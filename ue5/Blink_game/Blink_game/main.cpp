@@ -1,89 +1,52 @@
 #include "Pin.h"
-#include "PiDigitalInput.h"
-#include "PiDigitalOutput.h"
-
-#include <wiringPi.h>
 
 #include <iostream>
-#include <chrono>
-#include <atomic>
-#include <mutex>
-#include <condition_variable>
+#include "Player.h"
+#include "PinConfig.h"
+#include "ReactionGame.h"
 
 using namespace pi_io;
 
-void button_was_pressed(Pin p, const std::chrono::system_clock::time_point& start_time,
-	std::atomic_llong& ticks_since_press);
-
-void wait_for_button();
-
-void blink();
+Player create_player(int player_number)
+{
+	std::string player_name;
+	std::cout << "Player " << player_number << ", enter your name: ";
+	std::cin >> player_name;
+	return Player{ player_name };
+}
 
 //-------------------------------------------------------------------------------------------------
 // MAIN
 //-------------------------------------------------------------------------------------------------
 int main(void)
 {
-	blink();
-	wait_for_button();
+	Player p1 = create_player(1);
+	Player p2 = create_player(2);
+
+	std::cout << "How many rounds do you want to play? ";
+	int count;
+	std::cin >> count;
+	
+	reaction_game::Pin_config cfg{};
+	cfg.reaction_led = Pin::bcm_2;
+	cfg.player1_button = Pin::bcm_22;
+	cfg.player2_button = Pin::bcm_23;
+
+	reaction_game::Reaction_game game{ p1, p2, cfg, count };
+	auto result = game.play();
+
+	if (result == reaction_game::Reaction_game::Game_result::p1_wins) {
+		std::cout << p1.name() << " is the overall winner!" << std::endl;
+	}
+	else if (result == reaction_game::Reaction_game::Game_result::p2_wins) {
+		std::cout << p2.name() << " is the overall winner!" << std::endl;
+	}
+	else if (result == reaction_game::Reaction_game::Game_result::tie){
+		std::cout << "The result is an overall tie, you are both champs!" << std::endl;
+	}
+	else {
+		std::cout << "Game aborted due to inactivity" << std::endl;
+	}
+
 	return 0;
-}
-
-void blink()
-{
-	std::chrono::system_clock::time_point start_time = std::chrono::high_resolution_clock::now();
-	std::atomic_llong ticks_since_press{ 0 };
-
-	const std::function<void(Pin)> button_handler = [&](Pin p) { return button_was_pressed(p, start_time, ticks_since_press); };;
-	Pi_digital_output output{ Pin::bcm_2 };
-	Pi_digital_input input{ Pin::bcm_22, Pull_up_down::off, Edge_type::rising, button_handler };
-
-	for (int i = 0; i < 20; i++)
-	{
-		output.set_state(State::high);
-		delay(500);
-		output.set_state(State::low);
-		delay(500);
-		std::cout << (input.read() == State::high ? "HI" : "LO") << std::endl;
-		if (ticks_since_press != 0)
-			std::cout << "Ticks when button was pressed: " << ticks_since_press << std::endl;
-	}
-}
-
-
-
-void button_was_pressed(Pin p, const std::chrono::system_clock::time_point& start_time,
-	std::atomic_llong& ticks_since_press)
-{
-	const auto now = std::chrono::high_resolution_clock::now();
-	auto delta_t_since_start = now - start_time;
-	std::cout << "Button " << to_underlying(p) << " was pressed "
-		<< std::chrono::duration_cast<std::chrono::milliseconds>(delta_t_since_start).count()
-		<< "ms after start.\n";
-	ticks_since_press = delta_t_since_start.count();
-}
-
-
-void wait_for_button()
-{
-	std::cout << "Press a button to end the application" << std::endl;
-	std::mutex mtx;
-	std::condition_variable cv;
-	bool is_ready;
-
-	std::unique_lock<std::mutex> lock(mtx);
-
-	const std::function<void(Pin)> button_handler = [&](Pin)
-	{
-		is_ready = true;
-		std::unique_lock<std::mutex> button_lock(mtx); 
-		cv.notify_one();
-	};
-
-	Pi_digital_input input{ Pin::bcm_22, Pull_up_down::off, Edge_type::rising, button_handler };
-	while (!is_ready)
-	{
-		cv.wait(lock);
-	}
-	std::cout << "Button was pressed, we are good to leave!" << std::endl;
 }
