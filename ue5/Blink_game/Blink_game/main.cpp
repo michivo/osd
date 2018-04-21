@@ -5,8 +5,6 @@
 #include "PinConfig.h"
 #include "ReactionGame.h"
 
-using namespace pi_io;
-
 Player create_player(int player_number)
 {
 	std::string player_name;
@@ -20,20 +18,24 @@ Player create_player(int player_number)
 //-------------------------------------------------------------------------------------------------
 int main(void)
 {
-	Player p1 = create_player(1);
-	Player p2 = create_player(2);
+	using namespace pi_io;
+
+	auto p1 = create_player(1);
+	auto p2 = create_player(2);
 
 	std::cout << "How many rounds do you want to play? ";
 	int count;
-	std::cin >> count;
+	if(!(std::cin >> count) || count < 1 || count > 100)
+	{
+		std::cout << "Invalid number of rounds, enter a number between 1 and 100" << std::endl;
+		return 0;
+	}
 	
-	reaction_game::Pin_config cfg{};
-	cfg.reaction_led = Pin::bcm_2;
-	cfg.player1_button = Pin::bcm_22;
-	cfg.player2_button = Pin::bcm_23;
+	const reaction_game::Pin_config cfg{ Pin::bcm_2 , Pull_up_down::off, Pin::bcm_17,
+		Pin::bcm_27, Pull_up_down::off, Pin::bcm_10, Pin::bcm_22};
 
 	reaction_game::Reaction_game game{ p1, p2, cfg, count };
-	auto result = game.play();
+	const auto result = game.play();
 
 	if (result == reaction_game::Reaction_game::Game_result::p1_wins) {
 		std::cout << p1.name() << " is the overall winner!" << std::endl;

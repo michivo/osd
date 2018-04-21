@@ -57,6 +57,7 @@
     <ClCompile Include="PiIoManager.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="PiDigitalInput.cpp" />
+    <ClCompile Include="PinConfig.cpp" />
     <ClCompile Include="PinHandle.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="ReactionGame.cpp" />
