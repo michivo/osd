@@ -6,14 +6,6 @@
 
 #include <iostream>
 
-reaction_game::Player create_player(int player_number)
-{
-	std::string player_name;
-	std::cout << "Player " << player_number << ", enter your name: ";
-	std::cin >> player_name;
-	return reaction_game::Player{ player_name };
-}
-
 //-------------------------------------------------------------------------------------------------
 // MAIN
 //-------------------------------------------------------------------------------------------------
@@ -21,35 +13,33 @@ int main(void)
 {
 	using namespace pi_io;
 
-	auto p1 = create_player(1);
-	auto p2 = create_player(2);
+	auto p1 = reaction_game::create_player(1);
+	auto p2 = reaction_game::create_player(2);
 
 	std::cout << "How many rounds do you want to play? ";
-	int count;
-	if(!(std::cin >> count) || count < 1 || count > 100)
+	int count = 0;
+
+	const auto max_num_rounds = 100;
+	const auto min_num_rounds = 1;
+
+	if(!(std::cin >> count) || count < min_num_rounds || count > max_num_rounds)
 	{
-		std::cout << "Invalid number of rounds, enter a number between 1 and 100" << std::endl;
+		std::cout << "Invalid number of rounds, enter a number between " 
+		          << min_num_rounds << " and " << max_num_rounds << std::endl;
 		return 0;
 	}
-	
-	const reaction_game::Pin_config cfg{ Pin::bcm_2 , Pull_up_down::off, Pin::bcm_17,
-		Pin::bcm_27, Pull_up_down::off, Pin::bcm_10, Pin::bcm_22};
+
+	const auto p1_button = Pin::bcm_2;
+	const auto p1_led = Pin::bcm_17;
+	const auto p2_button = Pin::bcm_27;
+	const auto p2_led = Pin::bcm_10;
+	const auto reaction_led = Pin::bcm_22;
+
+	const reaction_game::Pin_config cfg{ p1_button , Pull_up_down::off, p1_led,
+		p2_button, Pull_up_down::off, p2_led, reaction_led};
 
 	reaction_game::Reaction_game game{ p1, p2, cfg, count };
-	const auto result = game.play();
-
-	if (result == reaction_game::Reaction_game::Game_result::p1_wins) {
-		std::cout << p1.name() << " is the overall winner!" << std::endl;
-	}
-	else if (result == reaction_game::Reaction_game::Game_result::p2_wins) {
-		std::cout << p2.name() << " is the overall winner!" << std::endl;
-	}
-	else if (result == reaction_game::Reaction_game::Game_result::tie){
-		std::cout << "The result is an overall tie, you are both champs!" << std::endl;
-	}
-	else {
-		std::cout << "Game aborted due to inactivity" << std::endl;
-	}
+	game.play();
 
 	return 0;
 }

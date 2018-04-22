@@ -30,15 +30,15 @@ namespace reaction_game {
 	{
 	}
 
-	Reaction_game::Game_result Reaction_game::play()
+	void Reaction_game::play()
 	{
 		std::cout << "Starting game, get ready!" << std::endl;
 		for (int i = 0; i < num_rounds_; i++)
 		{
 			if (!play_round())
 			{
-				std::cout << "Terminating game" << std::endl;
-				return Game_result::aborted;
+				std::cout << "Game aborted due to inactivity" << std::endl;
+				return;
 			}
 			if (p1_.victory_count() > num_rounds_ / 2 || p2_.victory_count() > num_rounds_ / 2)
 			{
@@ -47,16 +47,18 @@ namespace reaction_game {
 		}
 		if (p1_.victory_count() > p2_.victory_count()) {
 			on_overall_victory(p1_led_);
-			return Game_result::p1_wins;
+			std::cout << p1_.name() << " is the overall winner!" << std::endl;
+			return;
 		}
 
 		if (p2_.victory_count() > p1_.victory_count()) {
 			on_overall_victory(p2_led_);
-			return Game_result::p2_wins;
+			std::cout << p2_.name() << " is the overall winner!" << std::endl;
+			return;
 		}
 
 		on_overall_tie();
-		return Game_result::tie;
+		std::cout << "The result is an overall tie, you are both champs!" << std::endl;
 	}
 
 	void Reaction_game::reset_for_round()

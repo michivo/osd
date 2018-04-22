@@ -1,5 +1,6 @@
 #include "Player.h"
 #include <utility>
+#include <iostream>
 
 namespace reaction_game {
 
@@ -43,4 +44,11 @@ namespace reaction_game {
 		return button_time_;
 	}
 
+	Player create_player(int player_number)
+	{
+		std::string player_name;
+		std::cout << "Player " << player_number << ", enter your name: ";
+		std::cin >> player_name;
+		return Player{ player_name };
+	}
 }

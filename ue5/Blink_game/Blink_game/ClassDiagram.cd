@@ -9,13 +9,6 @@
   </Class>
   <Class Name="reaction_game::Reaction_game">
     <Position X="0.5" Y="4.5" Width="1.5" />
-    <NestedTypes>
-      <Enum Name="reaction_game::Reaction_game::Game_result" Collapsed="true">
-        <TypeIdentifier>
-          <NewMemberFileName>ReactionGame.h</NewMemberFileName>
-        </TypeIdentifier>
-      </Enum>
-    </NestedTypes>
     <TypeIdentifier>
       <HashCode>IAAAAAAAAAABBEBAAIAAJAFAiAGAAAAAggAAAAAAIQg=</HashCode>
       <FileName>ReactionGame.h</FileName>

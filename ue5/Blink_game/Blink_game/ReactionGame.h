@@ -14,9 +14,8 @@ namespace reaction_game {
 	public:
 		Reaction_game(Player& p1, Player& p2, const Pin_config& cfg, int num_rounds);
 
-		enum class Game_result { p1_wins, p2_wins, tie, aborted };
+		void play();
 
-		Game_result play();
 		void reset_for_round();
 
 	private:
@@ -38,4 +37,6 @@ namespace reaction_game {
 		static void on_overall_victory(pi_io::Pi_digital_output& p1);
 		void on_overall_tie();
 	};
+
+	Player create_player(int player_number);
 }
