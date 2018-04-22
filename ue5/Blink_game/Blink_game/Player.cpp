@@ -1,42 +1,46 @@
 #include "Player.h"
 #include <utility>
 
-Player::Player(std::string name) :
-	name_{ std::move(name) }, win_count_{ 0 }
-{
-}
+namespace reaction_game {
 
-std::string Player::name() const
-{
-	return name_;
-}
+	Player::Player(std::string name) :
+		name_{ std::move(name) }, win_count_{ 0 }
+	{
+	}
 
-void Player::add_victory()
-{
-	win_count_++;
-}
+	std::string Player::name() const
+	{
+		return name_;
+	}
 
-int Player::victory_count() const
-{
-	return win_count_;
-}
+	void Player::add_victory()
+	{
+		win_count_++;
+	}
 
-void Player::on_button_pressed()
-{
-	button_time_ = std::chrono::system_clock::now();
-}
+	int Player::victory_count() const
+	{
+		return win_count_;
+	}
 
-void Player::reset_button_time()
-{
-	button_time_ = Time_point{};
-}
+	void Player::on_button_pressed()
+	{
+		button_time_ = std::chrono::system_clock::now();
+	}
 
-bool Player::was_button_pressed() const
-{
-	return button_time_ != Time_point{};
-}
+	void Player::reset_button_time()
+	{
+		button_time_ = Time_point{};
+	}
 
-Player::Time_point Player::button_time() const
-{
-	return button_time_;
+	bool Player::was_button_pressed() const
+	{
+		return button_time_ != Time_point{};
+	}
+
+	Player::Time_point Player::button_time() const
+	{
+		return button_time_;
+	}
+
 }

@@ -2,32 +2,34 @@
 
 #include <string>
 #include <chrono>
-#include "Pin.h"
 
-class Player
-{
-	typedef std::chrono::time_point<std::chrono::system_clock, std::chrono::nanoseconds> Time_point;
+namespace reaction_game {
 
-public:
-	Player(std::string name);
+	class Player
+	{
+		typedef std::chrono::time_point<std::chrono::system_clock, std::chrono::nanoseconds> Time_point;
 
-	std::string name() const;
+	public:
+		Player(std::string name);
 
-	void add_victory();
+		std::string name() const;
 
-	int victory_count() const;
+		void add_victory();
 
-	void on_button_pressed();
+		int victory_count() const;
 
-	void reset_button_time();
+		void on_button_pressed();
 
-	bool was_button_pressed() const;
+		void reset_button_time();
 
-	Time_point button_time() const;
+		bool was_button_pressed() const;
 
-private:
-	std::string name_;
-	int win_count_;
-	Time_point button_time_;
-};
+		Time_point button_time() const;
 
+	private:
+		std::string name_;
+		int win_count_;
+		Time_point button_time_;
+	};
+
+}

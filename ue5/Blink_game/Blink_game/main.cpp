@@ -1,16 +1,17 @@
 #include "Pin.h"
 
-#include <iostream>
 #include "Player.h"
 #include "PinConfig.h"
 #include "ReactionGame.h"
 
-Player create_player(int player_number)
+#include <iostream>
+
+reaction_game::Player create_player(int player_number)
 {
 	std::string player_name;
 	std::cout << "Player " << player_number << ", enter your name: ";
 	std::cin >> player_name;
-	return Player{ player_name };
+	return reaction_game::Player{ player_name };
 }
 
 //-------------------------------------------------------------------------------------------------

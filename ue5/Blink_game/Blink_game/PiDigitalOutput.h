@@ -16,6 +16,8 @@ namespace pi_io {
 
 		Pi_digital_output(Pi_digital_output&& other) = default;
 
+		Pi_digital_output& operator=(State rhs);
+
 	private:
 		Pin_handle pin_;
 	};

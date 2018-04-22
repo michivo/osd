@@ -1,5 +1,6 @@
 #include "ReactionGame.h"
 #include "Enums.h"
+
 #include <thread>
 #include <chrono>
 #include <iostream>
@@ -60,9 +61,9 @@ namespace reaction_game {
 
 	void Reaction_game::reset_for_round()
 	{
-		led_output_.set_state(pi_io::State::low);
-		p1_led_.set_state(pi_io::State::low);
-		p2_led_.set_state(pi_io::State::low);
+		led_output_ = pi_io::State::low;
+		p1_led_ = pi_io::State::low;
+		p2_led_ = pi_io::State::low;
 		
 		p1_.reset_button_time();
 		p2_.reset_button_time();
@@ -84,12 +85,12 @@ namespace reaction_game {
 
 		std::this_thread::sleep_for(duration<long long, std::milli>{ wait_time });
 		const auto on_time = system_clock::now();
-		led_output_.set_state(pi_io::State::high);
+		led_output_ = pi_io::State::high;
 
 		std::unique_lock<std::mutex> lock(mutex_);
 		cv_.wait_for(lock, max_reaction_time);
 
-		led_output_.set_state(pi_io::State::low);
+		led_output_ = pi_io::State::low;
 		if (!p1_.was_button_pressed() && !p2_.was_button_pressed())
 		{
 			return false;
@@ -176,9 +177,9 @@ namespace reaction_game {
 
 		for(int i =0; i < 5; i++)
 		{
-			led.set_state(pi_io::State::high);
+			led = pi_io::State::high;
 			std::this_thread::sleep_for(blink_time);
-			led.set_state(pi_io::State::low);
+			led = pi_io::State::low;
 			std::this_thread::sleep_for(blink_time);
 		}
 	}
@@ -190,11 +191,11 @@ namespace reaction_game {
 
 		for (int i = 0; i < 5; i++)
 		{
-			p1_led_.set_state(pi_io::State::high);
-			p2_led_.set_state(pi_io::State::high);
+			p1_led_ = pi_io::State::high;
+			p2_led_ = pi_io::State::high;
 			std::this_thread::sleep_for(blink_time);
-			p1_led_.set_state(pi_io::State::low);
-			p2_led_.set_state(pi_io::State::low);
+			p1_led_ = pi_io::State::low;
+			p2_led_ = pi_io::State::low;
 			std::this_thread::sleep_for(blink_time);
 		}
 	}
