@@ -6,6 +6,18 @@
 
 #include <iostream>
 
+reaction_game::Pin_config get_pin_config(const reaction_game::Pin_config& cfg)
+{
+	const auto p1_button = pi_io::Pin::bcm_2;
+	const auto p1_led = pi_io::Pin::bcm_17;
+	const auto p2_button = pi_io::Pin::bcm_27;
+	const auto p2_led = pi_io::Pin::bcm_10;
+	const auto reaction_led = pi_io::Pin::bcm_22;
+
+	return reaction_game::Pin_config{ p1_button , pi_io::Pull_up_down::off, p1_led,
+		p2_button, pi_io::Pull_up_down::off, p2_led, reaction_led};
+}
+
 //-------------------------------------------------------------------------------------------------
 // MAIN
 //-------------------------------------------------------------------------------------------------
@@ -29,14 +41,7 @@ int main(void)
 		return 0;
 	}
 
-	const auto p1_button = Pin::bcm_2;
-	const auto p1_led = Pin::bcm_17;
-	const auto p2_button = Pin::bcm_27;
-	const auto p2_led = Pin::bcm_10;
-	const auto reaction_led = Pin::bcm_22;
-
-	const reaction_game::Pin_config cfg{ p1_button , Pull_up_down::off, p1_led,
-		p2_button, Pull_up_down::off, p2_led, reaction_led};
+	auto cfg = get_pin_config(cfg);
 
 	reaction_game::Reaction_game game{ p1, p2, cfg, count };
 	game.play();
