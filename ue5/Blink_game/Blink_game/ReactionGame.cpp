@@ -5,27 +5,18 @@
 #include <chrono>
 #include <iostream>
 #include <condition_variable>
+#include <utility>
 
 
 namespace reaction_game {
-	Reaction_game::Reaction_game(Player & p1, Player & p2, const Pin_config& cfg, int num_rounds) :
-		p1_{ p1 },
-		p2_{ p2 },
+	Reaction_game::Reaction_game(Player p1, Player p2, const Pin_config& cfg, int num_rounds) :
+		p1_{std::move(p1)},
+		p2_{std::move(p2)},
 		num_rounds_{ num_rounds },
 		led_output_{ cfg.reaction_led() },
-		p1_button_{ cfg.p1_button(), cfg.p1_pud(), pi_io::Edge_type::rising, [&](pi_io::Pin)
-		{
-			std::unique_lock<std::mutex> lock(mutex_);
-			p1.on_button_pressed();
-			cv_.notify_one();
-		} },
+		p1_button_{ cfg.p1_button(), cfg.p1_pud(), pi_io::Edge_type::rising, [&](pi_io::Pin) { this->on_button_pressed(this->p1_); } },
 		p1_led_{ cfg.p1_led() },
-		p2_button_{ cfg.p2_button(), cfg.p2_pud(), pi_io::Edge_type::rising, [&](pi_io::Pin)
-		{
-			std::unique_lock<std::mutex> lock(mutex_);
-			p2.on_button_pressed();
-			cv_.notify_one();
-		} },
+		p2_button_{ cfg.p2_button(), cfg.p2_pud(), pi_io::Edge_type::rising, [&](pi_io::Pin) { this->on_button_pressed(this->p2_); } },
 		p2_led_{ cfg.p2_led() }
 	{
 	}
@@ -66,7 +57,7 @@ namespace reaction_game {
 		led_output_ = pi_io::State::low;
 		p1_led_ = pi_io::State::low;
 		p2_led_ = pi_io::State::low;
-		
+
 		p1_.reset_button_time();
 		p2_.reset_button_time();
 	}
@@ -106,7 +97,7 @@ namespace reaction_game {
 	{
 		using namespace std::literals::chrono_literals;
 		constexpr auto led_on_time = 3s;
-		
+
 		std::cout << p.name() << " - you won!" << std::endl;
 		p.add_victory();
 		led.set_state(pi_io::State::high);
@@ -128,7 +119,7 @@ namespace reaction_game {
 			return;
 		}
 
-		if(p1_.button_time() < p2_.button_time())
+		if (p1_.button_time() < p2_.button_time())
 		{ // p1 was the earlier starter, p2 wins
 			on_victory(p2_, p2_led_);
 		}
@@ -177,7 +168,7 @@ namespace reaction_game {
 		using namespace std::literals::chrono_literals;
 		constexpr auto blink_time = 500ms;
 
-		for(int i =0; i < 5; i++)
+		for (int i = 0; i < 5; i++)
 		{
 			led = pi_io::State::high;
 			std::this_thread::sleep_for(blink_time);
@@ -200,5 +191,12 @@ namespace reaction_game {
 			p2_led_ = pi_io::State::low;
 			std::this_thread::sleep_for(blink_time);
 		}
+	}
+
+	void Reaction_game::on_button_pressed(Player& player)
+	{
+		std::unique_lock<std::mutex> lock(mutex_);
+		player.on_button_pressed();
+		cv_.notify_one();
 	}
 }

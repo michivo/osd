@@ -51,8 +51,6 @@
     </RemotePostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="IDigitalInput.cpp" />
-    <ClCompile Include="IDigitalOutput.cpp" />
     <ClCompile Include="PiDigitalOutput.cpp" />
     <ClCompile Include="PiIoManager.cpp" />
     <ClCompile Include="main.cpp" />
@@ -65,8 +63,6 @@
   <ItemGroup>
     <ClInclude Include="PinConfig.h" />
     <ClInclude Include="ReactionGame.h" />
-    <ClInclude Include="IDigitalInput.h" />
-    <ClInclude Include="IDigitalOutput.h" />
     <ClInclude Include="PiDigitalOutput.h" />
     <ClInclude Include="PiIoManager.h" />
     <ClInclude Include="PiDigitalInput.h" />

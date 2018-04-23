@@ -17,7 +17,13 @@ namespace pi_io {
 			return instance_;
 		}
 
+		Pi_io_manager(const Pi_io_manager &other) = delete;
 		Pi_io_manager(Pi_io_manager &&other) = default;
+
+		Pi_io_manager& operator=(const Pi_io_manager& rhs) = delete;
+		Pi_io_manager& operator=(Pi_io_manager&& rhs) = default;
+
+		~Pi_io_manager() = default;
 
 		Pin_handle register_output(Pin pin);
 		Pin_handle register_input(Pin pin, std::function<void(Pin)> event_handler,

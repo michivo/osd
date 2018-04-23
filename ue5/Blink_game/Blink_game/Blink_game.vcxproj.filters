@@ -11,12 +11,6 @@
     <ClCompile Include="PinConfig.cpp">
       <Filter>reactiongame</Filter>
     </ClCompile>
-    <ClCompile Include="IDigitalInput.cpp">
-      <Filter>piio</Filter>
-    </ClCompile>
-    <ClCompile Include="IDigitalOutput.cpp">
-      <Filter>piio</Filter>
-    </ClCompile>
     <ClCompile Include="PiDigitalInput.cpp">
       <Filter>piio</Filter>
     </ClCompile>
@@ -43,12 +37,6 @@
     <ClInclude Include="Enums.h">
       <Filter>piio</Filter>
     </ClInclude>
-    <ClInclude Include="IDigitalInput.h">
-      <Filter>piio</Filter>
-    </ClInclude>
-    <ClInclude Include="IDigitalOutput.h">
-      <Filter>piio</Filter>
-    </ClInclude>
     <ClInclude Include="PiDigitalInput.h">
       <Filter>piio</Filter>
     </ClInclude>
@@ -72,5 +60,8 @@
     <Filter Include="piio">
       <UniqueIdentifier>{3872bde6-6ab1-4378-85f0-5cc2b57ecb9f}</UniqueIdentifier>
     </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
 </Project>

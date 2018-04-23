@@ -13,8 +13,8 @@ int main(void)
 {
 	using namespace pi_io;
 
-	auto p1 = reaction_game::create_player(1);
-	auto p2 = reaction_game::create_player(2);
+	const auto p1 = reaction_game::create_player(1);
+	const auto p2 = reaction_game::create_player(2);
 
 	std::cout << "How many rounds do you want to play? ";
 	int count = 0;

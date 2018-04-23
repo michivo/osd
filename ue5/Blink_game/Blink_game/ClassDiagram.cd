@@ -10,7 +10,7 @@
   <Class Name="reaction_game::Reaction_game">
     <Position X="0.5" Y="4.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>IAAAAAAAAAABBEBAAIAAJAFAiAGAAAAAggAAAAAAIQg=</HashCode>
+      <HashCode>IAAAAACAAAABBEBAAIAAJAFAiAGAAAAAggAAAAAAIQg=</HashCode>
       <FileName>ReactionGame.h</FileName>
     </TypeIdentifier>
   </Class>
@@ -28,24 +28,10 @@
       <FileName>Player.h</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="pi_io::IDigital_input">
-    <Position X="4.25" Y="7.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAACAAAAACAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>IDigitalInput.h</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="pi_io::IDigital_output">
-    <Position X="6" Y="7.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAgAAQAAAA=</HashCode>
-      <FileName>IDigitalOutput.h</FileName>
-    </TypeIdentifier>
-  </Class>
   <Class Name="pi_io::Pi_digital_output">
     <Position X="6" Y="9.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAgAgAAAAAAQ=</HashCode>
+      <HashCode>AgAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAgAgAAAAAAQ=</HashCode>
       <FileName>PiDigitalOutput.h</FileName>
     </TypeIdentifier>
   </Class>
@@ -59,14 +45,14 @@
       </Enum>
     </NestedTypes>
     <TypeIdentifier>
-      <HashCode>EAQADIAiBAAAQAAACAIAAAIFAgJhAAAAKAYAAAAAAIA=</HashCode>
+      <HashCode>EAQADIAiBAAAQAAACAIAAAIFAgJhAAAAKAYgBAAAAIA=</HashCode>
       <FileName>PiIoManager.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="pi_io::Pi_digital_input">
     <Position X="4.25" Y="9.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAABAAAAAAACAAAAAAAABAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAABAAAAAAACAAAAAAAABAAAAQAAAgAAAAAAA=</HashCode>
       <FileName>PiDigitalInput.h</FileName>
     </TypeIdentifier>
   </Class>
