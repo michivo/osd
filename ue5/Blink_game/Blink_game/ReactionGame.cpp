@@ -7,8 +7,10 @@
 #include <condition_variable>
 #include <utility>
 
-
 namespace reaction_game {
+	using namespace std::chrono;
+	using namespace std::literals::chrono_literals;
+
 	Reaction_game::Reaction_game(Player p1, Player p2, const Pin_config& cfg, int num_rounds) :
 		p1_{std::move(p1)},
 		p2_{std::move(p2)},
@@ -64,9 +66,6 @@ namespace reaction_game {
 
 	bool Reaction_game::play_round()
 	{
-		using namespace std::chrono;
-		using namespace std::literals::chrono_literals;
-
 		constexpr auto max_wait_time = 8s;
 		constexpr auto min_wait_time = 3s;
 		constexpr auto max_reaction_time = 3s;
@@ -76,7 +75,7 @@ namespace reaction_game {
 		const auto wait_time = rand() % duration_cast<milliseconds>(max_wait_time - min_wait_time).count() +
 			duration_cast<milliseconds>(min_wait_time).count();
 
-		std::this_thread::sleep_for(duration<long long, std::milli>{ wait_time });
+		std::this_thread::sleep_for(milliseconds{ wait_time });
 		const auto on_time = system_clock::now();
 		led_output_ = pi_io::State::high;
 
@@ -165,7 +164,6 @@ namespace reaction_game {
 
 	void Reaction_game::on_overall_victory(pi_io::Pi_digital_output& led)
 	{
-		using namespace std::literals::chrono_literals;
 		constexpr auto blink_time = 500ms;
 
 		for (int i = 0; i < 5; i++)
