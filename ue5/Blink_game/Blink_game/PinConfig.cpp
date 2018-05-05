@@ -1,8 +1,22 @@
 #include "PinConfig.h"
+
+#include "json.hpp"
+
 #include <stdexcept>
 
 namespace reaction_game
 {
+	Pin_config::Pin_config(std::istream& stream)
+	{
+		nlohmann::json pin_json;
+		stream >> pin_json;
+
+		p1_button_ = pin_json["p1_button"].get<pi_io::Pin>();
+		p1_led_ = pin_json["p1_led"].get<pi_io::Pin>();
+		p2_button_ = pin_json["p2_button"].get<pi_io::Pin>();
+		p2_led_ = pin_json["p2_led"].get<pi_io::Pin>();
+		reaction_led_ = pin_json["state"].get<pi_io::Pin>();
+	}
 
 	Pin_config::Pin_config(pi_io::Pin p1_button, pi_io::Pull_up_down p1_pud, pi_io::Pin p1_led, 
 		pi_io::Pin p2_button, pi_io::Pull_up_down p2_pud, pi_io::Pin p2_led, pi_io::Pin reaction_led) :

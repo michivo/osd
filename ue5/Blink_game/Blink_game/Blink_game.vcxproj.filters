@@ -52,6 +52,7 @@
     <ClInclude Include="PinHandle.h">
       <Filter>piio</Filter>
     </ClInclude>
+    <ClInclude Include="json.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="reactiongame">
@@ -63,5 +64,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="pins.json" />
   </ItemGroup>
 </Project>

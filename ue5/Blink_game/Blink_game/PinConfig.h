@@ -1,12 +1,15 @@
 #pragma once
 #include "Pin.h"
 #include "Enums.h"
+#include <istream>
 
 namespace reaction_game
 {
 	class Pin_config
 	{
 	public:
+		explicit Pin_config(std::istream& stream);
+
 		Pin_config(pi_io::Pin p1_button, pi_io::Pull_up_down p1_pud, pi_io::Pin p1_led,
 			pi_io::Pin p2_button, pi_io::Pull_up_down p2_pud, pi_io::Pin p2_led,
 			pi_io::Pin reaction_led);
