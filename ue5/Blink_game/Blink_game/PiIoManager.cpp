@@ -1,9 +1,10 @@
 #include "PiIoManager.h"
 
+#include "piproxy.h"
+#include "PinHandle.h"
+
 #include <memory>
 #include <sstream>
-#include <wiringPi.h>
-#include "PinHandle.h"
 
 namespace pi_io {
 

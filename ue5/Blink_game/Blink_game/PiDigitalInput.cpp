@@ -9,9 +9,9 @@ namespace pi_io {
 	{
 	}
 
-	State Pi_digital_input::read()
+	State Pi_digital_input::read() const
 	{
-		auto val = Pi_io_manager::instance().digital_read(pin_);
+		auto const val = Pi_io_manager::instance().digital_read(pin_);
 		return State(val);
 	}
 

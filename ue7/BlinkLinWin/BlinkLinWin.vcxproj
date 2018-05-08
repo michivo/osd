@@ -11,14 +11,15 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{c8ee1188-7684-4dce-9a37-d897191ec8af}</ProjectGuid>
+    <ProjectGuid>{63bc0ba2-1bde-4df1-afaf-5f7fbc1178e1}</ProjectGuid>
     <Keyword>Linux</Keyword>
-    <RootNamespace>Blink_game</RootNamespace>
+    <RootNamespace>BlinkLinWin</RootNamespace>
     <MinimumVisualStudioVersion>15.0</MinimumVisualStudioVersion>
     <ApplicationType>Linux</ApplicationType>
     <ApplicationTypeRevision>1.0</ApplicationTypeRevision>
     <TargetLinuxPlatform>Raspberry</TargetLinuxPlatform>
     <LinuxProjectType>{8748239F-558C-44D1-944B-07B09C35B330}</LinuxProjectType>
+    <ProjectName>BlinkLin</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'" Label="Configuration">
@@ -51,44 +52,12 @@
     </RemotePostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="PiDigitalOutput.cpp" />
-    <ClCompile Include="PiIoManager.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="PiDigitalInput.cpp" />
-    <ClCompile Include="PinConfig.cpp" />
-    <ClCompile Include="PinHandle.cpp" />
-    <ClCompile Include="Player.cpp" />
-    <ClCompile Include="ReactionGame.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="json.hpp" />
-    <ClInclude Include="PinConfig.h" />
     <ClInclude Include="piproxy.h" />
-    <ClInclude Include="ReactionGame.h" />
-    <ClInclude Include="PiDigitalOutput.h" />
-    <ClInclude Include="PiIoManager.h" />
-    <ClInclude Include="PiDigitalInput.h" />
-    <ClInclude Include="Pin.h" />
-    <ClInclude Include="Enums.h" />
-    <ClInclude Include="PinHandle.h" />
-    <ClInclude Include="Player.h" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="ClassDiagram.cd" />
-    <Text Include="pins.json">
-      <DeploymentContent>true</DeploymentContent>
-      <RemoteCopyFile Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">true</RemoteCopyFile>
-      <RemoteCopyToOutputDir Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">true</RemoteCopyToOutputDir>
-      <RemoteCopyFile Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">true</RemoteCopyFile>
-      <RemoteCopyToOutputDir Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">true</RemoteCopyToOutputDir>
-      <FileType>Document</FileType>
-    </Text>
-  </ItemGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
-    <ClCompile>
-      <CppLanguageStandard>c++1y</CppLanguageStandard>
-    </ClCompile>
-  </ItemDefinitionGroup>
+  <ItemDefinitionGroup />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />
 </Project>
