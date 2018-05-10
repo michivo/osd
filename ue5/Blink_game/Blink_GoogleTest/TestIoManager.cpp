@@ -3,9 +3,9 @@
 #include "../Blink_win32/winpi.h"
 
 TEST(PiIoManager, TestOutput) {
-	typedef pi_io::Pi_io_manager io_mgr;
+	using io_mgr = pi_io::Pi_io_manager;
 
-	auto handle = io_mgr::instance().register_output(pi_io::Pin::bcm_10);
+	const auto handle = io_mgr::instance().register_output(pi_io::Pin::bcm_10);
 	io_mgr::instance().digital_write(handle, pi_io::State::high);
 
 	auto& emulator{ get_emulator() };
