@@ -7,8 +7,6 @@
 
 std::chrono::time_point<std::chrono::system_clock> start_time;
 
-Win_pi_emulator winpi_emulator;
-
 int piHiPri(const int pri)
 {
 	return 0;
@@ -36,6 +34,7 @@ unsigned int micros(void)
 
 Win_pi_emulator& get_emulator()
 {
+	static Win_pi_emulator winpi_emulator;
 	return winpi_emulator;
 }
 
@@ -85,7 +84,7 @@ void pinModeAlt(int pin, int mode)
 void pinMode(int pin, int mode)
 {
 	std::cout << "WINPI: Setting pin mode for pin " << pin << " to mode " << mode << std::endl;
-	winpi_emulator.add_pin(pin, mode == OUTPUT);
+	get_emulator().add_pin(pin, mode == OUTPUT);
 }
 
 void pullUpDnControl(int pin, int pud)
@@ -94,13 +93,13 @@ void pullUpDnControl(int pin, int pud)
 
 int digitalRead(int pin)
 {
-	return winpi_emulator.get_state(pin);
+	return get_emulator().get_state(pin);
 }
 
 void digitalWrite(int pin, int value)
 {
 	std::cout << "WINPI: Setting value " << value << " on pin " << pin << std::endl;
-	winpi_emulator.set_state(pin, value != 0);
+	get_emulator().set_state(pin, value != 0);
 }
 
 void pwmWrite(int pin, int value)
@@ -194,11 +193,11 @@ int wiringPiISR(int pin, int mode, void(*function)(void))
 {
 	if(mode == INT_EDGE_BOTH || mode == INT_EDGE_FALLING)
 	{
-		winpi_emulator.subscribe_falling(pin, function);
+		get_emulator().subscribe_falling(pin, function);
 	}
 	if(mode == INT_EDGE_BOTH || mode == INT_EDGE_RISING)
 	{
-		winpi_emulator.subscribe_rising(pin, function);
+		get_emulator().subscribe_rising(pin, function);
 	}
 	return 0;
 }
