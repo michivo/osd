@@ -22,7 +22,7 @@
     <Text Include="TODO.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\BalanceControl\Dummy.cpp" />
+    <ClCompile Include="..\BalanceControlPi\Dummy.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

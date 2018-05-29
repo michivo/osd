@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27428.2015
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BalanceControl", "BalanceControl.vcxproj", "{8A64564A-6CA2-419A-8B90-C6636C49F1C7}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BalanceControlPi", "BalanceControlPi\BalanceControlPi.vcxproj", "{8A64564A-6CA2-419A-8B90-C6636C49F1C7}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BalanceLib", "..\BalanceLib\BalanceLib.vcxproj", "{FE9E9AB1-49A4-49F0-A5B3-B2D654EB8807}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BalanceLib", "BalanceLib\BalanceLib.vcxproj", "{FE9E9AB1-49A4-49F0-A5B3-B2D654EB8807}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BalanceOptimizer", "BalanceOptimizer\BalanceOptimizer.vcxproj", "{CFAA31C9-01DC-4B0E-913E-4A5482E786C9}"
 EndProject
