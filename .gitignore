@@ -289,3 +289,5 @@ __pycache__/
 /ue3/Lamps/Lamps.zip
 /ue7/BlinkLinWin/readme/images
 /ue8/BalanceControl/readme/images
+
+!ue8/BalanceControl/BalanceUI/bin
