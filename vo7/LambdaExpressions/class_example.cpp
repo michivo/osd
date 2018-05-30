@@ -3,6 +3,8 @@
 #include <algorithm>
 #include <iostream>
 
+using namespace std;
+
 Int_vector::Int_vector(std::vector<int> vector) : data_{vector}
 {
 }
@@ -23,8 +25,8 @@ void Int_vector::print()
 
 	int i = 0;
 	std::for_each(data_.begin(), data_.end(), [this, &i](const int& val)
-	{ // prints something like [0 of 3]: 5, so [index of size]: value
-		std::cout << "[" << i++ << " of " << this->data_.size() << "]:\t" << val << "\n";
+	{ // prints something like [2 of 3]: 5, so [index of size]: value
+		std::cout << "[" << ++i << " of " << this->data_.size() << "]:\t" << val << "\n";
 	});
 	std::cout << "===================\n";
 }
@@ -36,7 +38,9 @@ bool is_odd(int x)
 
 void class_example()
 {
-	const std::vector<int> vec{ 1, 2, 3, 4, 5, 6 };
+	vector<int> vec(10);
+	int i = 0;
+	generate(begin(vec), end(vec), [&i]() -> int { return i++; }); // generates a list using a lambda
 	Int_vector int_vec = vec;
 	int_vec.print();
 	int_vec.remove_if(is_odd); // functions can also be used for std::functions!

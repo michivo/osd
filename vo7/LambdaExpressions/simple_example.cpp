@@ -15,7 +15,10 @@ void simple_example()
 {
 	using namespace std::chrono_literals;
 
-	run_delayed(100ms, []() {std::cout << "Hello world!\n"; });
-	run_delayed(100ms, [] {std::cout << "Hello world!\n"; }); // braces are optional if there are no params
-	run_delayed(100ms, [] () noexcept {std::cout << "Hello world!\n"; }); // may be noexcept
+	run_delayed(10ms, []() {std::cout << "One!\n"; });
+	run_delayed(20ms, [] {std::cout << "Two!\n"; }); // braces are optional if there are no params
+	run_delayed(40ms, [] () noexcept {std::cout << "Three!\n"; }); // may be noexcept
+
+	std::thread bye_thread(run_delayed, 100ms, []() {std::cout << "Four!\n"; }); // will probably be printed at the end of the program
+	bye_thread.detach();
 }
