@@ -147,6 +147,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="bind_example.h" />
     <ClInclude Include="capture_example.h" />
     <ClInclude Include="class_example.h" />
     <ClInclude Include="numeric_example.h" />
@@ -155,6 +156,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="bind_example.cpp" />
     <ClCompile Include="capture_example.cpp" />
     <ClCompile Include="class_example.cpp" />
     <ClCompile Include="LambdaExpressions.cpp" />
